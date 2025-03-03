@@ -21,7 +21,7 @@ interface City {
 
 interface CitySelectProps {
   onChange: (value: { id: string; name: string }) => void;
-  register: UseFormRegister<any>;
+  register: UseFormRegister<unknown>;
   name: string;
   disabled?: boolean;
   defaultValue?: string;

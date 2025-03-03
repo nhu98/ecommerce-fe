@@ -21,7 +21,7 @@ interface District {
 
 interface DistrictSelectProps {
   onChange: (value: { id: string; name: string }) => void;
-  register: UseFormRegister<any>;
+  register: UseFormRegister<unknown>;
   name: string;
   cityId: string;
   disabled?: boolean;

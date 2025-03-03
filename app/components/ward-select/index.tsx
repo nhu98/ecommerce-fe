@@ -21,7 +21,7 @@ interface Ward {
 
 interface WardSelectProps {
   onChange: (value: string) => void;
-  register: UseFormRegister<any>;
+  register: UseFormRegister<unknown>;
   name: string;
   districtId: string;
   disabled?: boolean;

@@ -1,0 +1,345 @@
+'use client';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  AddProductFormData,
+  addProductSchema,
+  ProductResponse,
+} from '@/schemaValidation/auth.schema';
+import { Label } from '@/components/ui/label';
+import CategorySelect from '@/app/admin/components/category-select';
+import BrandSelect from '@/app/admin/components/brand-select';
+import { Textarea } from '@/components/ui/textarea';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { postWithFormData } from '@/lib/http-client';
+import { toast } from '@/components/ui/use-toast';
+
+interface AddModalProps {
+  childrenTrigger?: React.ReactNode;
+  title?: string;
+  description?: string;
+  handleRefresh: () => void;
+}
+
+const AddProductModal = ({
+  childrenTrigger,
+  title,
+  description,
+  handleRefresh,
+}: AddModalProps) => {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AddProductFormData>({
+    resolver: zodResolver(addProductSchema),
+  });
+
+  const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const [previewImages, setPreviewImages] = useState<(string | null)[]>(
+    Array(5).fill(null),
+  );
+
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    fileInputRefs.current = Array(5)
+      .fill(null)
+      .map(() => React.createRef<HTMLInputElement>().current);
+  }, []);
+
+  const handleNumberInput = (field: 'price', value: string) => {
+    const sanitizedValue = value.replace(/\D/g, '');
+    const formattedValue = Number(sanitizedValue).toLocaleString('vi-VN');
+    setValue(field, formattedValue, { shouldValidate: true });
+  };
+
+  const handleFileChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageUrl = reader.result as string;
+        setPreviewImages((prev) => {
+          const newPreviewImages = [...prev];
+          newPreviewImages[index] = imageUrl;
+          return newPreviewImages;
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleClearImage = (index: number) => {
+    setPreviewImages((prev) => {
+      const newPreviewImages = [...prev];
+      newPreviewImages[index] = null;
+      return newPreviewImages;
+    });
+    if (fileInputRefs.current[index]) {
+      fileInputRefs.current[index].value = '';
+    }
+  };
+
+  const onSubmitForm = async (data: AddProductFormData) => {
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('brand_id', data.brand_id);
+    formData.append('category_id', data.category_id);
+    formData.append('detail', data.detail);
+    formData.append('price', data.price.toString());
+    fileInputRefs.current.forEach((ref, index) => {
+      if (ref && ref.files && ref.files[0]) {
+        formData.append(`img${index + 1}`, ref.files[0]);
+      }
+    });
+
+    if (loading) return;
+    setLoading(true);
+    try {
+      const result: ProductResponse = await postWithFormData(
+        '/product/create',
+        formData,
+      );
+
+      if (result.id) {
+        handleRefresh();
+        reset();
+        setOpen(false);
+        toast({
+          title: 'Success',
+          description: 'Thêm product thành công!',
+          variant: 'success',
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error('Lỗi khi thêm sản phẩm:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger>{childrenTrigger}</DialogTrigger>
+
+      <DialogContent className="">
+        <DialogHeader className="flex justify-center items-center">
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+
+        <form
+          onSubmit={handleSubmit(onSubmitForm)}
+          className="flex flex-col items-center gap-4"
+        >
+          <div className="w-full flex flex-col gap-2">
+            <Label htmlFor="name">{'Tên sản phẩm'}</Label>
+            <Input
+              id="name"
+              disabled={loading}
+              placeholder="Nhập tên sản phẩm"
+              {...register('name')}
+            />
+            {errors.name && (
+              <p className="text-red-500">{errors.name.message}</p>
+            )}
+          </div>
+
+          <div className="w-full flex flex-col gap-2">
+            <Label htmlFor="brand_id">{'Thương hiệu sản phẩm'}</Label>
+            <BrandSelect
+              onChange={(value) => {
+                setValue('brand_id', value.id);
+              }}
+              register={register}
+              name="brand_id"
+              disabled={loading}
+            />
+            {errors.brand_id && (
+              <p className="text-red-500">{errors.brand_id.message}</p>
+            )}
+          </div>
+
+          <div className="w-full flex flex-col gap-2">
+            <Label htmlFor="category_id">{'Danh mục sản phẩm'}</Label>
+            <CategorySelect
+              onChange={(value) => {
+                setValue('category_id', value.id);
+              }}
+              register={register}
+              name="category_id"
+              disabled={loading}
+            />
+            {errors.category_id && (
+              <p className="text-red-500">{errors.category_id.message}</p>
+            )}
+          </div>
+
+          <div className="w-full flex flex-col gap-2">
+            <Label htmlFor="price">{'Giá sản phẩm'}</Label>
+            <Input
+              {...register('price')}
+              placeholder="Nhập giá sản phẩm"
+              onChange={(e) => handleNumberInput('price', e.target.value)}
+              disabled={loading}
+            />
+            {errors.price && (
+              <p className="text-red-500">{errors.price.message}</p>
+            )}
+          </div>
+
+          <div className="w-full flex flex-col gap-2">
+            <Label htmlFor="detail">{'Chi tiết sản phẩm'}</Label>
+            <Textarea
+              {...register('detail')}
+              placeholder="Nhập chi tiết sản phẩm"
+              disabled={loading}
+            />
+            {errors.detail && (
+              <p className="text-red-500">{errors.detail.message}</p>
+            )}
+          </div>
+
+          <div className="w-full flex flex-col gap-2">
+            <Label>{'Hình ảnh sản phẩm'}</Label>
+
+            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+              {previewImages.map((image, index) => (
+                <div
+                  key={index}
+                  className={`relative flex flex-col items-center ${index === 0 ? 'col-span-1 md:col-span-2' : 'col-span-1'}`}
+                >
+                  <Image
+                    src={image || '/images/no-image.webp'}
+                    alt={`img${index + 1}`}
+                    width={index === 0 ? 160 : 80}
+                    height={index === 0 ? 160 : 80}
+                    onClick={() => setSelectedImage(image)}
+                    className={`w-full h-full rounded-lg object-cover cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  />
+
+                  <div className="flex items-center gap-2 mt-2">
+                    <Input
+                      ref={(el) => {
+                        if (el) {
+                          fileInputRefs.current[index] = el;
+                        }
+                      }}
+                      id={`img${index + 1}`}
+                      type="file"
+                      accept="image/*"
+                      disabled={loading}
+                      onChange={(event) => handleFileChange(event, index)}
+                      className="hidden"
+                    />
+
+                    <div
+                      className={`${index === 0 ? 'flex flex-col md:flex-row' : 'flex flex-col'} gap-2`}
+                    >
+                      <div className=" flex flex-row items-center gap-2">
+                        <label
+                          htmlFor={`img${index + 1}`}
+                          className={`bg-blue-500 text-white px-2 py-1 rounded cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          Chọn hình {index + 1}
+                        </label>
+
+                        {image && (
+                          <span className="text-sm text-gray-600 truncate max-w-[100px]">
+                            {fileInputRefs.current[index]?.files?.[0]?.name ||
+                              ''}
+                          </span>
+                        )}
+                      </div>
+
+                      <label
+                        onClick={() => handleClearImage(index)}
+                        className={` bg-red-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      >
+                        Bỏ chọn
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <Button
+              type="submit"
+              className="bg-red-500 hover:bg-red-600 text-white"
+              disabled={loading}
+            >
+              {loading && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+              )}
+              {loading ? 'Đang thêm...' : 'Thêm'}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[9999]"
+          onClick={(e) => {
+            e.stopPropagation(); // Ngăn sự kiện lan truyền
+            if (e.target === e.currentTarget) {
+              setSelectedImage(null);
+            }
+          }}
+        >
+          <Image
+            src={selectedImage}
+            alt="Preview"
+            width={700}
+            height={700}
+            className="max-w-full max-h-full object-contain rounded-lg"
+          />
+        </div>
+      )}
+    </Dialog>
+  );
+};
+
+export default AddProductModal;

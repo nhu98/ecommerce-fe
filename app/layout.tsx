@@ -1,10 +1,22 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Roboto_Mono } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
+import TrackingForm from '@/app/components/search-order-tracking';
+import Header from '@/app/components/header';
+import Footer from '@/app/components/footer';
+import { Toaster } from '@/components/ui/toaster';
+import React from 'react';
+import AppProvider from '@/app/AppProvider';
 
-const robotoMono = Roboto_Mono({
-  variable: '--font-roboto-mono',
+// const robotoMono = Roboto_Mono({
+//   variable: '--font-roboto-mono',
+//   subsets: ['latin'],
+// });
+
+const montserrat = Montserrat({
+  variable: '--font-montserrat',
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -19,7 +31,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${robotoMono.variable} font-mono`}>{children}</body>
+      <body className={`${montserrat.variable} font-montserrat`}>
+        <AppProvider>
+          <Header />
+          <main>{children}</main>
+          <TrackingForm />
+          <Footer />
+        </AppProvider>
+        <Toaster />
+      </body>
     </html>
   );
 }

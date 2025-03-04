@@ -59,7 +59,7 @@ const Filters = ({ onHandleFilter, defaultValues }: FilterProps) => {
       setValue('brandId', defaultValues.brandId);
       setValue('categoryId', defaultValues.categoryId);
     }
-  }, [defaultValues]);
+  }, [defaultValues, setValue]);
 
   const onSubmitPrice = (data: FilterFormData) => {
     onHandleFilter(data);

@@ -23,34 +23,34 @@ export default function Tracking() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetchOrders();
-  }, [currentPage, phone]);
+    const fetchOrders = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<OrderApiResponse>('/order/get', {
+          phone: phone || '',
+          fromDate: '',
+          toDate: '',
+          status: '',
+          payment_status: '',
+          page: currentPage.toString(),
+        });
 
-  const fetchOrders = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<OrderApiResponse>('/order/get', {
-        phone: phone || '',
-        fromDate: '',
-        toDate: '',
-        status: '',
-        payment_status: '',
-        page: currentPage.toString(),
-      });
-
-      if (result?.orders.length === 0) {
-        setOrders([]);
-      } else if (result?.orders && result?.totalPages) {
-        setOrders(result?.orders);
-        setTotalPages(result?.totalPages);
+        if (result?.orders.length === 0) {
+          setOrders([]);
+        } else if (result?.orders && result?.totalPages) {
+          setOrders(result.orders);
+          setTotalPages(result.totalPages);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchOrders().then();
+  }, [currentPage, phone]);
 
   const renderContent = () => {
     if (loading) {

@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from '@/components/ui/use-toast';
-import { UseFormRegister } from 'react-hook-form';
+import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
 
 interface District {
   id: string;
@@ -19,23 +19,23 @@ interface District {
   typeText: string;
 }
 
-interface DistrictSelectProps {
+interface DistrictSelectProps<T extends FieldValues> {
   onChange: (value: { id: string; name: string }) => void;
-  register: UseFormRegister<unknown>;
-  name: string;
+  register: UseFormRegister<T>;
+  name: keyof T;
   cityId: string;
   disabled?: boolean;
   defaultValue?: string;
 }
 
-const DistrictSelect = ({
+const DistrictSelect = <T extends FieldValues>({
   onChange,
   register,
   name,
   cityId,
   disabled,
   defaultValue,
-}: DistrictSelectProps) => {
+}: DistrictSelectProps<T>) => {
   const [districts, setDistricts] = useState<District[]>([]);
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const DistrictSelect = ({
 
   return (
     <Select disabled={disabled} onValueChange={handleDistrictChange}>
-      <SelectTrigger className="" {...register(name)}>
+      <SelectTrigger className="" {...register(name as Path<T>)}>
         <SelectValue placeholder={defaultValue || 'Chọn Quận / Huyện'} />
       </SelectTrigger>
       <SelectContent className="bg-white">

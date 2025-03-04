@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from '@/components/ui/use-toast';
-import { UseFormRegister } from 'react-hook-form';
+import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
 
 interface City {
   id: string;
@@ -19,21 +19,21 @@ interface City {
   slug: string;
 }
 
-interface CitySelectProps {
+interface CitySelectProps<T extends FieldValues> {
   onChange: (value: { id: string; name: string }) => void;
-  register: UseFormRegister<unknown>;
-  name: string;
+  register: UseFormRegister<T>;
+  name: keyof T;
   disabled?: boolean;
   defaultValue?: string;
 }
 
-const CitySelect = ({
+const CitySelect = <T extends FieldValues>({
   onChange,
   register,
   name,
   disabled,
   defaultValue,
-}: CitySelectProps) => {
+}: CitySelectProps<T>) => {
   const [cities, setCities] = useState<City[]>([]);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ const CitySelect = ({
 
   return (
     <Select disabled={disabled} onValueChange={handleCityChange}>
-      <SelectTrigger className="" {...register(name)}>
+      <SelectTrigger className="" {...register(name as Path<T>)}>
         <SelectValue placeholder={defaultValue || 'Chọn Thành phố / Tỉnh'} />
       </SelectTrigger>
       <SelectContent className="bg-white">

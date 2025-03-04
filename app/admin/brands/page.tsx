@@ -33,30 +33,30 @@ export default function Brands() {
   const [selectedItem, setSelectedItem] = useState<CategoryResponse>();
 
   useEffect(() => {
-    fetchBrands();
-  }, [currentPage, valueSearch]);
+    const fetchBrands = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<BrandsApiResponse>('/brand/get', {
+          search: valueSearch,
+          page: currentPage.toString(),
+        });
 
-  const fetchBrands = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<BrandsApiResponse>('/brand/get', {
-        search: valueSearch,
-        page: currentPage.toString(),
-      });
-
-      if (result?.brands.length === 0) {
-        setBrands([]);
-      } else if (result?.brands && result?.totalPages) {
-        setBrands(result?.brands);
-        setTotalPages(result?.totalPages);
+        if (result?.brands.length === 0) {
+          setBrands([]);
+        } else if (result?.brands && result?.totalPages) {
+          setBrands(result?.brands);
+          setTotalPages(result?.totalPages);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchBrands().then();
+  }, [currentPage, valueSearch]);
 
   const reMoveBrand = async (id: string) => {
     if (loading) return;
@@ -73,7 +73,7 @@ export default function Brands() {
           variant: 'success',
           duration: 3000,
         });
-        fetchBrands();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -102,9 +102,9 @@ export default function Brands() {
 
   const handleSearchById = (value: string) => {
     if (value) {
-      fetchBrandById(value.trim());
+      fetchBrandById(value.trim()).then();
     } else {
-      fetchBrands();
+      window.location.reload();
     }
   };
 
@@ -133,7 +133,7 @@ export default function Brands() {
           duration: 3000,
         });
 
-        fetchBrands();
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error during Add Brand:', error);
@@ -162,7 +162,7 @@ export default function Brands() {
           duration: 3000,
         });
 
-        fetchBrands();
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error during Update Brand:', error);
@@ -191,7 +191,7 @@ export default function Brands() {
             key={brand.id}
             handleUpdate={handleUpdateBrand}
             handleRemove={(id) => {
-              reMoveBrand(id);
+              reMoveBrand(id).then();
             }}
           />
         ))}

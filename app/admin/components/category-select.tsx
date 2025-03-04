@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { UseFormRegister } from 'react-hook-form';
+import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
 import {
   CategoriesApiResponse,
   CategoryResponse,
@@ -17,32 +17,21 @@ import { get } from '@/lib/http-client';
 import { Button } from '@/components/ui/button';
 import LoaderComponent from '@/app/components/loader';
 
-interface CategorySelectProps {
+interface CategorySelectProps<T extends FieldValues> {
   onChange: (value: { id: string; name: string }) => void;
-  register: UseFormRegister<any>;
-  name:
-    | 'name'
-    | 'brand_id'
-    | 'category_id'
-    | 'price'
-    | 'detail'
-    | 'img1'
-    | 'img2'
-    | 'img3'
-    | 'img4'
-    | 'img5'
-    | 'categoryId';
+  register: UseFormRegister<T>;
+  name: keyof T;
   disabled?: boolean;
   defaultValue?: string;
 }
 
-const CategorySelect = ({
+const CategorySelect = <T extends FieldValues>({
   onChange,
   register,
   name,
   disabled,
   defaultValue,
-}: CategorySelectProps) => {
+}: CategorySelectProps<T>) => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
 
@@ -56,7 +45,29 @@ const CategorySelect = ({
   const [defaultValueLoaded, setDefaultValueLoaded] = useState(false); // Thêm state
 
   useEffect(() => {
-    fetchCategories();
+    const fetchCategories = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<CategoriesApiResponse>('/category/get', {
+          search: '',
+          page: currentPage.toString(),
+        });
+
+        if (result?.categories.length === 0) {
+          setCategories([]);
+        } else if (result?.categories && result?.totalPages) {
+          setCategories(result?.categories);
+          setTotalPages(result?.totalPages);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories().then();
   }, [currentPage]);
 
   useEffect(() => {
@@ -64,28 +75,6 @@ const CategorySelect = ({
       checkDefaultValue();
     }
   }, [defaultValue, categories, currentPage, totalPages]);
-
-  const fetchCategories = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<CategoriesApiResponse>('/category/get', {
-        search: '',
-        page: currentPage.toString(),
-      });
-
-      if (result?.categories.length === 0) {
-        setCategories([]);
-      } else if (result?.categories && result?.totalPages) {
-        setCategories(result?.categories);
-        setTotalPages(result?.totalPages);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleCategoryChange = (CategoryId: string) => {
     setSelectedCategoryId(CategoryId);
@@ -119,7 +108,7 @@ const CategorySelect = ({
       onValueChange={handleCategoryChange}
       value={selectedCategoryId}
     >
-      <SelectTrigger className="" {...register(name)}>
+      <SelectTrigger className="" {...register(name as Path<T>)}>
         <SelectValue placeholder="Chọn danh mục" />
       </SelectTrigger>
       <SelectContent className="bg-white">

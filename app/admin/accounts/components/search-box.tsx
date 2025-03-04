@@ -1,5 +1,4 @@
-'use client';
-import React, { useCallback, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { debounce } from 'lodash';
 
@@ -11,18 +10,13 @@ export interface SearchBoxProps {
 const SearchBox = ({ onSearch, placeholder }: SearchBoxProps) => {
   const [searchValue, setSearchValue] = useState('');
 
+  // Dùng useMemo để chỉ tạo debounce function một lần
+  const debouncedSearch = useMemo(() => debounce(onSearch, 1200), [onSearch]);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
     debouncedSearch(event.target.value);
   };
-
-  const debouncedSearch = useCallback(
-    debounce((value) => {
-      setSearchValue(value);
-      onSearch(value);
-    }, 1200),
-    [onSearch],
-  );
 
   return (
     <div className="flex w-full items-center">

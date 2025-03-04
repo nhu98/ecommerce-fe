@@ -30,7 +30,40 @@ export default function SearchProduct() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetchProducts();
+    const fetchProducts = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<ProductsApiResponse>('/product/get', {
+          search: searchValue?.trim() || '',
+          category: categoryId || '',
+          brand: brandId || '',
+          minPrice: minPrice || '',
+          maxPrice: maxPrice || '',
+          sortBy: sortBy || '',
+          page: currentPage.toString(),
+        });
+
+        if (result?.products.length === 0) {
+          setProducts([]);
+        } else if (result?.products && result?.totalPages) {
+          const products: Product[] = result.products.map((product) => ({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.img1,
+          }));
+          setProducts(products);
+          setTotalPages(result.totalPages);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts().then();
   }, [
     searchValue,
     categoryId,
@@ -40,42 +73,6 @@ export default function SearchProduct() {
     sortBy,
     currentPage,
   ]);
-
-  const fetchProducts = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<ProductsApiResponse>('/product/get', {
-        search: searchValue?.trim() || '',
-        category: categoryId || '',
-        brand: brandId || '',
-        minPrice: minPrice || '',
-        maxPrice: maxPrice || '',
-        sortBy: sortBy || '',
-        page: currentPage.toString(),
-      });
-
-      if (result?.products.length === 0) {
-        setProducts([]);
-      } else if (result?.products && result?.totalPages) {
-        const products: Product[] = result?.products.map((product) => {
-          return {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.img1,
-          };
-        });
-        setProducts(products);
-
-        setTotalPages(result?.totalPages);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const renderContent = () => {
     if (loading) {

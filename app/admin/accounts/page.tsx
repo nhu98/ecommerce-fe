@@ -20,29 +20,29 @@ export default function Accounts() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetchUsers();
-  }, [currentPage]);
+    const fetchUsers = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<UserApiResponse>('/users/get', {
+          page: currentPage.toString(),
+        });
 
-  const fetchUsers = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<UserApiResponse>('/users/get', {
-        page: currentPage.toString(),
-      });
-
-      if (result?.users.length === 0) {
-        setUsers([]);
-      } else if (result?.users && result?.totalPages) {
-        setUsers(result?.users);
-        setTotalPages(result?.totalPages);
+        if (result?.users.length === 0) {
+          setUsers([]);
+        } else if (result?.users && result?.totalPages) {
+          setUsers(result?.users);
+          setTotalPages(result?.totalPages);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchUsers().then();
+  }, [currentPage]);
 
   const fetchUserByPhone = async (phoneNumber: string) => {
     if (loading) return;
@@ -77,7 +77,7 @@ export default function Accounts() {
           variant: 'success',
           duration: 3000,
         });
-        fetchUsers();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -90,9 +90,9 @@ export default function Accounts() {
     const numericValue = value.replace(/[^0-9]/g, '');
 
     if (numericValue) {
-      fetchUserByPhone(numericValue);
+      fetchUserByPhone(numericValue).then();
     } else {
-      fetchUsers();
+      window.location.reload();
     }
   };
 
@@ -110,7 +110,7 @@ export default function Accounts() {
             item={user}
             key={user.phone}
             handleRemove={(phoneNumber) => {
-              reMoveAccount(phoneNumber);
+              reMoveAccount(phoneNumber).then();
             }}
           />
         ))}

@@ -39,34 +39,34 @@ export default function Orders() {
   );
 
   useEffect(() => {
-    fetchOrders();
-  }, [currentPage, dateToSelected, dateFromSelected, phoneValueSearch]);
+    const fetchOrders = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<OrderApiResponse>('/order/get', {
+          phone: phoneValueSearch,
+          fromDate: dateFromSelected,
+          toDate: dateToSelected,
+          status: '',
+          payment_status: '',
+          page: currentPage.toString(),
+        });
 
-  const fetchOrders = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<OrderApiResponse>('/order/get', {
-        phone: phoneValueSearch,
-        fromDate: dateFromSelected,
-        toDate: dateToSelected,
-        status: '',
-        payment_status: '',
-        page: currentPage.toString(),
-      });
-
-      if (result?.orders.length === 0) {
-        setOrders([]);
-      } else if (result?.orders && result?.totalPages) {
-        setOrders(result?.orders);
-        setTotalPages(result?.totalPages);
+        if (result?.orders.length === 0) {
+          setOrders([]);
+        } else if (result?.orders && result?.totalPages) {
+          setOrders(result?.orders);
+          setTotalPages(result?.totalPages);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchOrders().then();
+  }, [currentPage, dateToSelected, dateFromSelected, phoneValueSearch]);
 
   const reMoveOrder = async (id: string) => {
     if (loading) return;
@@ -83,7 +83,7 @@ export default function Orders() {
           variant: 'success',
           duration: 3000,
         });
-        fetchOrders();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -112,9 +112,9 @@ export default function Orders() {
 
   const handleSearchById = (value: string) => {
     if (value) {
-      fetchOrderById(value.trim());
+      fetchOrderById(value.trim()).then();
     } else {
-      fetchOrders();
+      window.location.reload();
     }
   };
 
@@ -141,7 +141,7 @@ export default function Orders() {
             item={order}
             key={order.id}
             handleRemove={(id) => {
-              reMoveOrder(id);
+              reMoveOrder(id).then();
             }}
           />
         ))}

@@ -39,12 +39,15 @@ export function writeLocalUser(items: UserDataType) {
 
 export function getLocalUser(): UserDataType | undefined {
   if (typeof window !== 'undefined' && window.localStorage) {
-    try {
-      return JSON.parse(<string>window.localStorage.getItem('userInfo'));
-    } catch (error) {
-      console.error('Error parsing local user:', error);
-      writeLocalUser({} as UserDataType);
-      return undefined;
+    const userInfo = window.localStorage.getItem('userInfo');
+    if (userInfo) {
+      try {
+        return JSON.parse(userInfo);
+      } catch (error) {
+        console.error('Error parsing local user:', error);
+        writeLocalUser({} as UserDataType);
+        return undefined;
+      }
     }
   }
 }

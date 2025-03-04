@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Search, ShoppingCart, UserRoundCog, X } from 'lucide-react';
 import NavLinks, { NavLink } from '../nav-link';
@@ -17,11 +17,11 @@ import { useAppContext } from '@/app/AppProvider';
 
 const navLinks: NavLink[] = [
   { href: '#a', label: 'About' },
+  { href: '#b', label: 'Services' },
   {
-    href: '#b',
-    label: 'Services',
+    href: '#c',
+    label: 'Contact',
   },
-  { href: '#c', label: 'Contact' },
 ];
 
 function Header() {
@@ -93,25 +93,28 @@ function Header() {
     };
   }, []);
 
+  const handleOutsideClick = useCallback(
+    (event: MouseEvent) => {
+      if (
+        searchInputRef.current &&
+        !searchInputRef.current.contains(event.target as Node) &&
+        isSearchVisible
+      ) {
+        setIsSearchVisible(false);
+      }
+    },
+    [isSearchVisible],
+  );
+
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick);
     return () => {
       document.removeEventListener('mousedown', handleOutsideClick);
     };
-  }, [isSearchVisible]);
+  }, [handleOutsideClick]);
 
   const toggleSearch = () => {
     setIsSearchVisible(!isSearchVisible);
-  };
-
-  const handleOutsideClick = (event: MouseEvent) => {
-    if (
-      searchInputRef.current &&
-      !searchInputRef.current.contains(event.target as Node) &&
-      isSearchVisible
-    ) {
-      setIsSearchVisible(false);
-    }
   };
 
   const handleLogoutFromNextServer = async () => {

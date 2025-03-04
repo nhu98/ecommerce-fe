@@ -62,7 +62,7 @@ const Checkout: React.FC = () => {
       setValue('district', localUser.district);
       setValue('ward', localUser.ward);
     }
-  }, [localUser]);
+  }, [localUser, setValue]);
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -79,7 +79,7 @@ const Checkout: React.FC = () => {
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, []);
+  }, [setValue]);
 
   const calculateSubTotal = () => {
     return cartItems.reduce(

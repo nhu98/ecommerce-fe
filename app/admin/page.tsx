@@ -32,7 +32,34 @@ export default function Product() {
   const [valueSearch, setValueSearch] = useState('');
 
   useEffect(() => {
-    fetchProducts();
+    const fetchProducts = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<ProductsApiResponse>('/product/get', {
+          search: valueSearch,
+          category: categorySelected,
+          brand: brandSelected,
+          minPrice: minPrice,
+          maxPrice: maxPrice,
+          sortBy: sortBy,
+          page: currentPage.toString(),
+        });
+
+        if (result?.products.length === 0) {
+          setProducts([]);
+        } else if (result?.products && result?.totalPages) {
+          setProducts(result?.products);
+          setTotalPages(result?.totalPages);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts().then();
   }, [
     currentPage,
     valueSearch,
@@ -79,33 +106,6 @@ export default function Product() {
     }
   };
 
-  const fetchProducts = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<ProductsApiResponse>('/product/get', {
-        search: valueSearch,
-        category: categorySelected,
-        brand: brandSelected,
-        minPrice: minPrice,
-        maxPrice: maxPrice,
-        sortBy: sortBy,
-        page: currentPage.toString(),
-      });
-
-      if (result?.products.length === 0) {
-        setProducts([]);
-      } else if (result?.products && result?.totalPages) {
-        setProducts(result?.products);
-        setTotalPages(result?.totalPages);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const reMoveProduct = async (id: string) => {
     if (loading) return;
     setLoading(true);
@@ -121,7 +121,7 @@ export default function Product() {
           variant: 'success',
           duration: 3000,
         });
-        fetchProducts();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -150,9 +150,9 @@ export default function Product() {
 
   const handleSearchById = (value: string) => {
     if (value) {
-      fetchProductById(value.trim());
+      fetchProductById(value.trim()).then();
     } else {
-      fetchProducts();
+      window.location.reload();
     }
   };
 
@@ -178,7 +178,7 @@ export default function Product() {
             item={product}
             key={product.id}
             handleRemove={(id) => {
-              reMoveProduct(id);
+              reMoveProduct(id).then();
             }}
             handleRefresh={handleRefresh}
           />
@@ -195,7 +195,7 @@ export default function Product() {
   };
 
   const handleRefresh = () => {
-    fetchProducts();
+    window.location.reload();
   };
 
   const handleFilter = (data: FilterFormData) => {

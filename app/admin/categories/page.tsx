@@ -32,30 +32,30 @@ export default function Categories() {
   const [selectedItem, setSelectedItem] = useState<CategoryResponse>();
 
   useEffect(() => {
-    fetchCategories();
-  }, [currentPage, valueSearch]);
+    const fetchCategories = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<CategoriesApiResponse>('/category/get', {
+          search: valueSearch,
+          page: currentPage.toString(),
+        });
 
-  const fetchCategories = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<CategoriesApiResponse>('/category/get', {
-        search: valueSearch,
-        page: currentPage.toString(),
-      });
-
-      if (result?.categories.length === 0) {
-        setCategories([]);
-      } else if (result?.categories && result?.totalPages) {
-        setCategories(result?.categories);
-        setTotalPages(result?.totalPages);
+        if (result?.categories.length === 0) {
+          setCategories([]);
+        } else if (result?.categories && result?.totalPages) {
+          setCategories(result?.categories);
+          setTotalPages(result?.totalPages);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchCategories().then();
+  }, [currentPage, valueSearch]);
 
   const reMoveCategory = async (id: string) => {
     if (loading) return;
@@ -72,7 +72,7 @@ export default function Categories() {
           variant: 'success',
           duration: 3000,
         });
-        fetchCategories();
+        window.location.reload();
       }
     } catch (error) {
       console.log(error);
@@ -101,9 +101,9 @@ export default function Categories() {
 
   const handleSearchById = (value: string) => {
     if (value) {
-      fetchCategoryById(value.trim());
+      fetchCategoryById(value.trim()).then();
     } else {
-      fetchCategories();
+      window.location.reload();
     }
   };
 
@@ -132,7 +132,7 @@ export default function Categories() {
           duration: 3000,
         });
 
-        fetchCategories();
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error during Add Category:', error);
@@ -161,7 +161,7 @@ export default function Categories() {
           duration: 3000,
         });
 
-        fetchCategories();
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error during Update Category:', error);
@@ -190,7 +190,7 @@ export default function Categories() {
             key={category.id}
             handleUpdate={handleUpdateCategory}
             handleRemove={(id) => {
-              reMoveCategory(id);
+              reMoveCategory(id).then();
             }}
           />
         ))}

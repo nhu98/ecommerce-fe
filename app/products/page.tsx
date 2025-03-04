@@ -26,46 +26,43 @@ export default function Product() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetchProducts();
-  }, [categoryId]);
+    const fetchProducts = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<ProductsApiResponse>('/product/get', {
+          search: '',
+          category: categoryId || '',
+          brand: '',
+          minPrice: '',
+          maxPrice: '',
+          sortBy: '',
+          page: currentPage.toString(),
+        });
 
-  const fetchProducts = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<ProductsApiResponse>('/product/get', {
-        search: '',
-        category: categoryId || '',
-        brand: '',
-        minPrice: '',
-        maxPrice: '',
-        sortBy: '',
-        page: currentPage.toString(),
-      });
+        if (result?.products.length === 0) {
+          setProducts([]);
+        } else if (result?.products && result?.totalPages) {
+          setCategoryName(result?.products[0]?.category_name);
 
-      if (result?.products.length === 0) {
-        setProducts([]);
-      } else if (result?.products && result?.totalPages) {
-        setCategoryName(result?.products[0]?.category_name);
-
-        const products: Product[] = result?.products.map((product) => {
-          return {
+          const products: Product[] = result?.products.map((product) => ({
             id: product.id,
             name: product.name,
             price: product.price,
             image: product.img1,
-          };
-        });
-        setProducts(products);
-
-        setTotalPages(result?.totalPages);
+          }));
+          setProducts(products);
+          setTotalPages(result?.totalPages);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchProducts().then();
+  }, [categoryId, currentPage]);
 
   const renderContent = () => {
     if (loading) {

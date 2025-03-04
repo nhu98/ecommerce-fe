@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { UseFormRegister } from 'react-hook-form';
+import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
 import {
   BrandResponse,
   BrandsApiResponse,
@@ -17,32 +17,21 @@ import { get } from '@/lib/http-client';
 import { Button } from '@/components/ui/button';
 import LoaderComponent from '@/app/components/loader';
 
-interface BrandSelectProps {
+interface BrandSelectProps<T extends FieldValues> {
   onChange: (value: { id: string; name: string }) => void;
-  register: UseFormRegister<any>;
-  name:
-    | 'name'
-    | 'brand_id'
-    | 'category_id'
-    | 'price'
-    | 'detail'
-    | 'img1'
-    | 'img2'
-    | 'img3'
-    | 'img4'
-    | 'img5'
-    | 'brandId';
+  register: UseFormRegister<T>;
+  name: keyof T;
   disabled?: boolean;
   defaultValue?: string;
 }
 
-const BrandSelect = ({
+const BrandSelect = <T extends FieldValues>({
   onChange,
   register,
   name,
   disabled,
   defaultValue,
-}: BrandSelectProps) => {
+}: BrandSelectProps<T>) => {
   const [loading, setLoading] = useState(false);
   const [brands, setBrands] = useState<BrandResponse[]>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -54,7 +43,29 @@ const BrandSelect = ({
   const [defaultValueLoaded, setDefaultValueLoaded] = useState(false); // Thêm state
 
   useEffect(() => {
-    fetchBrands();
+    const fetchBrands = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<BrandsApiResponse>('/brand/get', {
+          search: '',
+          page: currentPage.toString(),
+        });
+
+        if (result?.brands.length === 0) {
+          setBrands([]);
+        } else if (result?.brands && result?.totalPages) {
+          setBrands(result?.brands);
+          setTotalPages(result?.totalPages);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBrands().then();
   }, [currentPage]);
 
   useEffect(() => {
@@ -62,28 +73,6 @@ const BrandSelect = ({
       checkDefaultValue();
     }
   }, [defaultValue, brands, currentPage, totalPages]);
-
-  const fetchBrands = async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<BrandsApiResponse>('/brand/get', {
-        search: '',
-        page: currentPage.toString(),
-      });
-
-      if (result?.brands.length === 0) {
-        setBrands([]);
-      } else if (result?.brands && result?.totalPages) {
-        setBrands(result?.brands);
-        setTotalPages(result?.totalPages);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const checkDefaultValue = () => {
     if (brands.some((brand) => brand.id === defaultValue)) {
@@ -115,7 +104,7 @@ const BrandSelect = ({
       onValueChange={handleBrandChange}
       value={selectedBrandId}
     >
-      <SelectTrigger className="" {...register(name)}>
+      <SelectTrigger className="" {...register(name as Path<T>)}>
         <SelectValue placeholder="Chọn thương hiệu" />
       </SelectTrigger>
       <SelectContent className="bg-white">

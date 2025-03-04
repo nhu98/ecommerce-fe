@@ -74,18 +74,17 @@ const UpdateProductModal = ({
       setValue('detail', item.detail || '');
       setValue('price', item.price.toLocaleString('vi-VN') || '');
 
-      // Load images for editing
       const newPreviewImages = Array(5).fill(null);
       for (let i = 1; i <= 5; i++) {
         const imgField = `img${i}` as keyof ProductResponse;
         if (item[imgField]) {
-          const imgSrc = `${baseUrl}/imgs/products/${item[imgField]}`;
-          newPreviewImages[i - 1] = imgSrc;
+          newPreviewImages[i - 1] =
+            `${baseUrl}/imgs/products/${item[imgField]}`;
         }
       }
       setPreviewImages(newPreviewImages);
     }
-  }, [item]);
+  }, [item, setValue]);
 
   useEffect(() => {
     fileInputRefs.current = Array(5)

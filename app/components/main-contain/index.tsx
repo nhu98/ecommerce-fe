@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ProductCategory from '@/app/components/productCategory';
 import { get } from '@/lib/http-client';
 import {
@@ -29,24 +29,9 @@ const MainContent = () => {
   const [categoriesCurrentPage, setCategoriesCurrentPage] = useState(1);
 
   const [groupedProducts, setGroupedProducts] = useState<GroupedProduct[]>([]);
-  const [loadedCategories, setLoadedCategories] = useState<string[]>([]);
+  const loadedCategories = useRef<string[]>([]); // Sử dụng useRef
 
-  useEffect(() => {
-    fetchCategories();
-  }, [categoriesCurrentPage]);
-
-  useEffect(() => {
-    if (!categories.length) return;
-    categories.forEach((category) => {
-      // Kiểm tra xem category đã được tải hay chưa
-      if (!loadedCategories.includes(category.id)) {
-        fetchProductsByCategory(category.id, category.name);
-        setLoadedCategories((prev) => [...prev, category.id]); // Thêm ID vào state đã tải
-      }
-    });
-  }, [categories, loadedCategories]);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     if (loading) return;
     setLoading(true);
     try {
@@ -66,48 +51,62 @@ const MainContent = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [categoriesCurrentPage]);
 
-  const fetchProductsByCategory = async (
-    categoryId: string,
-    categoryName: string,
-  ) => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<ProductsApiResponse>('/product/get', {
-        search: '',
-        category: categoryId,
-        brand: '',
-        minPrice: '',
-        maxPrice: '',
-        sortBy: '',
-        page: '1',
-      });
+  const fetchProductsByCategory = useCallback(
+    async (categoryId: string, categoryName: string) => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<ProductsApiResponse>('/product/get', {
+          search: '',
+          category: categoryId,
+          brand: '',
+          minPrice: '',
+          maxPrice: '',
+          sortBy: '',
+          page: '1',
+        });
 
-      if (result?.products.length === 0) {
-        return;
-      } else if (result?.products && result?.totalPages) {
-        setGroupedProducts((prev) => [
-          ...prev,
-          {
-            id: categoryId,
-            name: categoryName,
-            products: result?.products.map((product) => ({
-              id: product.id,
-              name: product.name,
-              price: product.price,
-              image: product.img1,
-            })),
-          },
-        ]);
+        if (result?.products.length === 0) {
+          return;
+        } else if (result?.products && result?.totalPages) {
+          setGroupedProducts((prev) => [
+            ...prev,
+            {
+              id: categoryId,
+              name: categoryName,
+              products: result?.products.map((product) => ({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.img1,
+              })),
+            },
+          ]);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [loading],
+  );
+
+  useEffect(() => {
+    fetchCategories().then();
+  }, [fetchCategories]);
+
+  useEffect(() => {
+    if (!categories.length) return;
+    categories.forEach((category) => {
+      if (!loadedCategories.current.includes(category.id)) {
+        fetchProductsByCategory(category.id, category.name).then();
+        loadedCategories.current.push(category.id); // Cập nhật useRef
+      }
+    });
+  }, [categories, fetchProductsByCategory]);
 
   const handleLoadMoreCategories = () => {
     if (categoriesCurrentPage >= categoriesTotalPages) return;

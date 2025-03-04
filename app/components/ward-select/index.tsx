@@ -9,7 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from '@/components/ui/use-toast';
-import { UseFormRegister } from 'react-hook-form';
+import { FieldValues, Path, UseFormRegister } from 'react-hook-form';
 
 interface Ward {
   id: string;
@@ -19,23 +19,23 @@ interface Ward {
   typeText: string;
 }
 
-interface WardSelectProps {
+interface WardSelectProps<T extends FieldValues> {
   onChange: (value: string) => void;
-  register: UseFormRegister<unknown>;
-  name: string;
+  register: UseFormRegister<T>;
+  name: keyof T;
   districtId: string;
   disabled?: boolean;
   defaultValue?: string;
 }
 
-const WardSelect = ({
+const WardSelect = <T extends FieldValues>({
   onChange,
   register,
   name,
   districtId,
   disabled,
   defaultValue,
-}: WardSelectProps) => {
+}: WardSelectProps<T>) => {
   const [wards, setWards] = useState<Ward[]>([]);
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const WardSelect = ({
 
   return (
     <Select disabled={disabled} onValueChange={onChange}>
-      <SelectTrigger className="" {...register(name)}>
+      <SelectTrigger className="" {...register(name as Path<T>)}>
         <SelectValue placeholder={defaultValue || 'Chọn Phường / Xã'} />
       </SelectTrigger>
       <SelectContent className="bg-white">

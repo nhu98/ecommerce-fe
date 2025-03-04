@@ -29,26 +29,16 @@ export default function ProductDetail() {
   const [currentQuantity, setCurrentQuantity] = useState(1);
 
   useEffect(() => {
-    fetchProductById();
-  }, [productId]);
+    if (!productId) return;
 
-  const fetchProductById = async () => {
-    if (loading) return;
     setLoading(true);
-    try {
-      const result = await get<ProductResponse>('/product/getById', {
-        id: productId || '',
-      });
-
-      if (result?.id) {
-        setProduct(result);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    get<ProductResponse>('/product/getById', { id: productId })
+      .then((result) => {
+        if (result?.id) setProduct(result);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setLoading(false));
+  }, [productId]);
 
   const handleQuantityChange = (quantity: number) => {
     setCurrentQuantity(quantity);

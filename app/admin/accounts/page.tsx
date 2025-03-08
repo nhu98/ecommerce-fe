@@ -126,7 +126,7 @@ export default function Accounts() {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full min-h-[50vh]">
       <div className="wrapper overflow-x-hidden m-4 md:m-8">
         <h2 className="text-2xl font-bold mb-4">Quản lý tài khoản</h2>
 

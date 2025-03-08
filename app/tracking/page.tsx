@@ -96,7 +96,7 @@ export default function Tracking() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-h-[50vh]">
       <div className="wrapper overflow-x-hidden m-4 md:m-8">
         <div className="flex w-full flex-col justify-center items-center">
           <h1 className="text-2xl">TRA CỨU ĐƠN HÀNG</h1>

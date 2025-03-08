@@ -63,6 +63,12 @@ const SignInCard = ({ onClose }: SignInCardProps) => {
           return;
         }
 
+        if (decoded?.role_id === 1) {
+          router.push('/admin');
+        } else if (decoded?.role_id === 3) {
+          router.push('/');
+        }
+
         await getUerInfo(decoded.phone);
 
         toast({
@@ -72,17 +78,8 @@ const SignInCard = ({ onClose }: SignInCardProps) => {
           duration: 3000,
         });
 
-        if (decoded?.role_id === 1) {
-          router.push('/admin');
-          window.location.reload();
-          onClose();
-          return;
-        }
-
-        router.push('/');
-        window.location.reload();
         onClose();
-        return;
+        window.location.reload();
       }
     } catch (error) {
       console.error('Error during signIn:', error);

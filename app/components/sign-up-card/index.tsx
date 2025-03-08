@@ -95,7 +95,9 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-4">
           <div className="space-y-1">
-            <Label htmlFor="phoneNumber">Số điện thoại</Label>
+            <Label className="flex flex-row" htmlFor="phoneNumber">
+              Số điện thoại<p className="text-red-500 ml-1">*</p>
+            </Label>
             <Input
               disabled={loading}
               id="phoneNumber"
@@ -108,7 +110,9 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="password">Mật khẩu</Label>
+            <Label className="flex flex-row" htmlFor="password">
+              Mật khẩu<p className="text-red-500 ml-1">*</p>
+            </Label>
             <div className="relative">
               <Input
                 disabled={loading}
@@ -131,7 +135,9 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="fullName">Họ và tên</Label>
+            <Label className="flex flex-row" htmlFor="fullName">
+              Tên<p className="text-red-500 ml-1">*</p>
+            </Label>
             <Input
               disabled={loading}
               id="fullName"
@@ -157,7 +163,9 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="city">Thành phố / Tỉnh</Label>
+            <Label className="flex flex-row" htmlFor="city">
+              Thành phố / Tỉnh<p className="text-red-500 ml-1">*</p>
+            </Label>
             <CitySelect
               onChange={(value) => {
                 setValue('city', value.name);
@@ -173,7 +181,9 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="district">Quận / Huyện</Label>
+            <Label className="flex flex-row" htmlFor="district">
+              Quận / Huyện<p className="text-red-500 ml-1">*</p>
+            </Label>
             <DistrictSelect
               onChange={(value) => {
                 setValue('district', value.name);
@@ -190,7 +200,9 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="ward">Phường / Xã</Label>
+            <Label className="flex flex-row" htmlFor="ward">
+              Phường / Xã<p className="text-red-500 ml-1">*</p>
+            </Label>
             <WardSelect
               onChange={(value) => {
                 setValue('ward', value);
@@ -206,7 +218,9 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="street">Số nhà / Đường</Label>
+            <Label className="flex flex-row" htmlFor="street">
+              Số nhà / Đường<p className="text-red-500 ml-1">*</p>
+            </Label>
             <Input disabled={loading} id="street" {...register('street')} />
             {errors.street && (
               <p className="text-red-500">{errors.street.message}</p>

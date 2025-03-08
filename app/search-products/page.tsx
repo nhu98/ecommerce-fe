@@ -78,7 +78,11 @@ export default function SearchProduct() {
     if (loading) {
       return <></>;
     } else if (products.length === 0) {
-      return <p>Danh sách sản phẩm rỗng.</p>;
+      return (
+        <div className="flex flex-col justify-center items-center">
+          <p>Danh sách sản phẩm rỗng.</p>
+        </div>
+      );
     }
 
     return (
@@ -101,7 +105,7 @@ export default function SearchProduct() {
   };
 
   return (
-    <div>
+    <div className="w-full min-h-[50vh]">
       <div className="wrapper overflow-x-hidden m-8">
         <div className="flex flex-col mt-8 gap-4">
           <div className="flex flex-col justify-center items-center">

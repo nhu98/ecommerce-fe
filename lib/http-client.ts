@@ -1,5 +1,6 @@
 import envConfig from '@/config';
 import { toast } from '@/components/ui/use-toast';
+import { logout } from '@/lib/utils';
 
 const baseUrl = envConfig.NEXT_PUBLIC_URL;
 
@@ -33,7 +34,14 @@ async function request<T>(
 
         switch (response.status) {
           case 400:
-            errorMessage = `Bad Request: ${errorText}`;
+            if (errorText === 'old_password incorrect') {
+              errorMessage = 'Mật khẩu hiện tại không đúng!';
+            } else if (errorText === 'jwt expired') {
+              await logout();
+              window.location.reload();
+            } else {
+              errorMessage = `Bad Request: ${errorText}`;
+            }
             break;
           case 401:
             localStorage.removeItem('sessionToken');
@@ -147,18 +155,51 @@ async function requestWithFormData<T>(
     });
 
     if (!response.ok) {
-      const errorText = await response.clone().text();
-      console.error('Response Status:', response.status);
-      console.error('Response Headers:', response.headers);
-      console.error('Response Body:', errorText);
+      let errorMessage = `Something went wrong! Error Status: ${response.status}`;
+      try {
+        const errorText = await response.clone().text();
+
+        console.log('Error Text:', errorText);
+
+        switch (response.status) {
+          case 400:
+            if (errorText === 'jwt expired') {
+              await logout();
+              window.location.reload();
+            }
+
+            errorMessage = `Bad Request: ${errorText}`;
+            break;
+          case 401:
+            localStorage.removeItem('sessionToken');
+            errorMessage = 'You are not authorized to access this resource.';
+            break;
+          case 403:
+            errorMessage =
+              'You do not have permission to access this resource.';
+            break;
+          case 404:
+            errorMessage = 'The requested resource was not found.';
+            break;
+          case 500:
+            if (errorText) {
+              errorMessage = `Internal Server Error: ${errorText}`;
+            } else {
+              errorMessage =
+                'Internal Server Error. Please check the console for details.';
+            }
+            break;
+        }
+      } catch (error) {
+        console.log(error);
+      }
 
       toast({
         title: 'Error',
-        description: `Something went wrong! Error Status: ${response.status} - ${errorText}`,
+        description: errorMessage,
         variant: 'destructive',
         duration: 3000,
       });
-
       return {} as T;
     } else {
       return (await response.json()) as T;

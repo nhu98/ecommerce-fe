@@ -12,8 +12,12 @@ import { toast } from '@/components/ui/use-toast';
 import DatePickerComponent from '@/app/components/date-picker';
 import { Label } from '@/components/ui/label';
 import { formatDateToString } from '@/lib/utils';
-import SearchBox from '@/app/admin/accounts/components/search-box';
 import LoaderComponent from '@/app/components/loader';
+import StatusSelect from '@/app/admin/orders/components/statust-select';
+import SearchBox from '@/app/admin/accounts/components/search-box';
+import { TooltipComponent } from '@/app/components/tooltip';
+import { Ban } from 'lucide-react';
+import PaymentStatusSelect from '@/app/admin/orders/components/payment-statust-select';
 
 export default function Orders() {
   const [loading, setLoading] = useState(false);
@@ -23,20 +27,11 @@ export default function Orders() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [phoneValueSearch, setPhoneValueSearch] = useState('');
+  const [statusValue, setStatusValue] = useState('');
+  const [paymentStatusValue, setPaymentStatusValue] = useState('');
 
-  const today = new Date();
-  const oneMonthAgo = new Date(
-    today.getFullYear(),
-    today.getMonth() - 1,
-    today.getDate(),
-  );
-
-  const [dateToSelected, setDateToSelected] = useState<string>(
-    formatDateToString(today),
-  );
-  const [dateFromSelected, setDateFromSelected] = useState<string>(
-    formatDateToString(oneMonthAgo),
-  );
+  const [dateToSelected, setDateToSelected] = useState<string>('');
+  const [dateFromSelected, setDateFromSelected] = useState<string>('');
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -47,8 +42,8 @@ export default function Orders() {
           phone: phoneValueSearch,
           fromDate: dateFromSelected,
           toDate: dateToSelected,
-          status: '',
-          payment_status: '',
+          status: statusValue,
+          payment_status: paymentStatusValue,
           page: currentPage.toString(),
         });
 
@@ -66,7 +61,14 @@ export default function Orders() {
     };
 
     fetchOrders().then();
-  }, [currentPage, dateToSelected, dateFromSelected, phoneValueSearch]);
+  }, [
+    currentPage,
+    dateToSelected,
+    dateFromSelected,
+    phoneValueSearch,
+    statusValue,
+    paymentStatusValue,
+  ]);
 
   const reMoveOrder = async (id: string) => {
     if (loading) return;
@@ -127,6 +129,18 @@ export default function Orders() {
     }
   };
 
+  const handleChangeStatus = (value: { id: string; name: string }) => {
+    if (value.id) {
+      setStatusValue(value.id);
+    }
+  };
+
+  const handleChangePaymentStatus = (value: { id: string; name: string }) => {
+    if (value.id) {
+      setPaymentStatusValue(value.id);
+    }
+  };
+
   const renderContent = () => {
     if (loading) {
       return <></>;
@@ -157,21 +171,20 @@ export default function Orders() {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full min-h-[50vh]">
       <div className="wrapper overflow-x-hidden m-4 md:m-8">
         <h2 className="text-2xl font-bold mb-4">Quản lý đơn đặt hàng</h2>
         <div className="w-full flex flex-col md:justify-between md:flex-row gap-4 mb-4">
-          <div className="flex flex-col">
+          <div className="w-full flex flex-col">
             <Label className="mb-2">Từ ngày:</Label>
             <DatePickerComponent
               handleValueChange={(value) => {
                 setDateFromSelected(formatDateToString(value));
               }}
-              defaultValue={oneMonthAgo}
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="w-full flex flex-col">
             <Label className="mb-2">Đến ngày:</Label>
             <DatePickerComponent
               handleValueChange={(value) => {
@@ -180,19 +193,42 @@ export default function Orders() {
             />
           </div>
 
-          <div className="flex items-end">
+          <div className="w-full flex items-end">
+            <StatusSelect onChange={handleChangeStatus} />
+          </div>
+
+          <div className="w-full flex items-end">
+            <PaymentStatusSelect onChange={handleChangePaymentStatus} />
+          </div>
+        </div>
+        <div className="w-full flex flex-col md:justify-between md:flex-row gap-4 mb-4">
+          <div className="w-full flex items-end">
             <SearchBox
               onSearch={handleSearchById}
               placeholder={'Tìm kiếm theo mã...'}
             />
           </div>
 
-          <div className="flex items-end">
+          <div className="w-full flex items-end">
             <SearchBox
               onSearch={handleSearchByPhone}
-              placeholder={'Tìm kiếm theo tên...'}
+              placeholder={'Tìm kiếm theo sdt...'}
             />
           </div>
+        </div>
+
+        <div className="flex mb-4">
+          <TooltipComponent
+            childrenTrigger={
+              <div
+                onClick={() => window.location.reload()}
+                className="relative w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center hover:bg-red-500 cursor-pointer transition-all duration-500 mr-2"
+              >
+                <Ban size={18} />
+              </div>
+            }
+            content="Loại bỏ tìm kiếm và bộ lọc"
+          />
         </div>
 
         {renderContent()}

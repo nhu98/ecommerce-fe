@@ -16,17 +16,13 @@ import { vi } from 'date-fns/locale';
 import { SelectSingleEventHandler } from 'react-day-picker';
 
 interface DatePickerDemoProps {
-  defaultValue?: Date;
   handleValueChange: (date: Date) => void;
 }
 
-const DatePickerComponent = ({
-  defaultValue = new Date(),
-  handleValueChange,
-}: DatePickerDemoProps) => {
+const DatePickerComponent = ({ handleValueChange }: DatePickerDemoProps) => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  const [date, setDate] = React.useState<Date>(defaultValue);
+  const [date, setDate] = React.useState<Date>();
 
   const handleDateChange = (selectedDate: Date) => {
     setDate(selectedDate);

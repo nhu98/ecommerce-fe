@@ -4,6 +4,7 @@ import { UserDataType } from '@/schemaValidation/auth.schema';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Locale } from 'date-fns';
 import { Product } from '@/app/products/page';
+import { toast } from '@/components/ui/use-toast';
 
 export interface DecodedToken extends JwtPayload {
   phone: string;
@@ -133,3 +134,34 @@ export const updateLocalStorage = (items: CartItem[]) => {
     localStorage.setItem('cart', JSON.stringify({ products: items }));
   }
 };
+
+export const handleLogoutFromNextServer = async () => {
+  try {
+    const response = await fetch('/api/logout', {
+      method: 'POST',
+    });
+
+    if (response.ok) {
+      console.log('Xoá cookie thành công');
+    } else {
+      console.error('Xoá cookie thất bại');
+    }
+  } catch (error) {
+    console.error('Lỗi khi Xoá cookie:', error);
+  }
+};
+
+export const logout = async () => {
+  resetLocalData();
+  await handleLogoutFromNextServer();
+  toast({
+    title: 'Thành công!',
+    description: 'Đăng xuất thành công!',
+    variant: 'success',
+    duration: 3000,
+  });
+};
+
+export function isValue<T>(obj: T | null | undefined): obj is T {
+  return obj !== null && obj !== undefined;
+}

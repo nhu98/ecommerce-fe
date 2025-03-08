@@ -21,7 +21,7 @@ export const paymentFormSchema = z.object({
     .string()
     .min(2, { message: 'Số nhà / Đường phải có ít nhất 2 ký tự' })
     .max(200, { message: 'Số nhà / Đường không được vượt quá 200 ký tự' }),
-  email: z.string(),
+  email: z.string().optional(),
 });
 
 export type PaymentFormData = z.infer<typeof paymentFormSchema>;
@@ -49,7 +49,7 @@ export interface ProductOrderType {
 
 export interface CreateOrderApiRequest {
   name: string;
-  email: string;
+  email?: string;
   customer_phone: string;
   city: string;
   district: string;

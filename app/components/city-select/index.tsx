@@ -73,7 +73,11 @@ const CitySelect = <T extends FieldValues>({
   };
 
   return (
-    <Select disabled={disabled} onValueChange={handleCityChange}>
+    <Select
+      defaultValue={defaultValue}
+      disabled={disabled}
+      onValueChange={handleCityChange}
+    >
       <SelectTrigger className="" {...register(name as Path<T>)}>
         <SelectValue placeholder={defaultValue || 'Chọn Thành phố / Tỉnh'} />
       </SelectTrigger>
@@ -81,8 +85,8 @@ const CitySelect = <T extends FieldValues>({
         {cities?.map((city) => (
           <SelectItem
             className="cursor-pointer hover:bg-gray-100"
-            key={city.id}
-            value={city.id}
+            key={city.name}
+            value={city.name}
           >
             {city.name}
           </SelectItem>

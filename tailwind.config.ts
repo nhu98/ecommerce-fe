@@ -41,9 +41,14 @@ export default {
             transform: 'translateY(-50%)',
           },
         },
+        pulse: {
+          '0%, 100%': { boxShadow: '0 0 0 0 var(--pulse-color)' },
+          '50%': { boxShadow: '0 0 0 8px var(--pulse-color)' },
+        },
       },
       animation: {
         slideDown: 'slideDown 0.5s ease-in-out',
+        pulse: 'pulse var(--duration) ease-out infinite',
       },
     },
   },

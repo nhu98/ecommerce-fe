@@ -49,10 +49,10 @@ const TrackingForm: React.FC = () => {
               TÌM KIẾM
             </button>
           </form>
-          <p className="flex justify-center items-center mt-4 text-gray-500">
-            Hotline hỗ trợ vận đơn: 0911 910 210 (Hỗ trợ tra mã vận đơn chuyển
-            phát)
-          </p>
+          {/*<p className="flex justify-center items-center mt-4 text-gray-500">*/}
+          {/*  Hotline hỗ trợ vận đơn: 0911 910 210 (Hỗ trợ tra mã vận đơn chuyển*/}
+          {/*  phát)*/}
+          {/*</p>*/}
         </div>
       )}
     </>

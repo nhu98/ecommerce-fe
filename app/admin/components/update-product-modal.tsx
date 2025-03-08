@@ -349,7 +349,7 @@ const UpdateProductModal = ({
                     ></path>
                   </svg>
                 )}
-                {loading ? 'Đang cập nhật...' : 'Câp nhật'}
+                {loading ? 'Đang cập nhật...' : 'Cập nhật'}
               </Button>
             </div>
           </form>

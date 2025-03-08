@@ -1,28 +1,48 @@
 'use client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Search, ShoppingCart, UserRoundCog, X } from 'lucide-react';
+import {
+  Inbox,
+  KeyRound,
+  Search,
+  ShoppingCart,
+  User,
+  UserRoundCog,
+  X,
+} from 'lucide-react';
 import NavLinks, { NavLink } from '../nav-link';
 import Link from 'next/link';
 import FiltersModel from '@/app/components/filters-modal';
 import AuthModal from '@/app/components/auth-modal';
-import { AvatarUser } from '@/app/components/user-avatar';
 import { SheetComponent } from '@/app/components/sheet-component';
 import { Button } from '@/components/ui/button';
-import { CartItem, getLocalUser, resetLocalData } from '@/lib/utils';
-import { FilterFormData, UserDataType } from '@/schemaValidation/auth.schema';
+import { CartItem, getLocalUser, isValue, logout } from '@/lib/utils';
+import {
+  FilterFormData,
+  ShopDataApiResponse,
+  UserDataType,
+} from '@/schemaValidation/auth.schema';
 import { usePathname, useRouter } from 'next/navigation';
 import SearchBox from '@/app/admin/accounts/components/search-box';
 import { useAppContext } from '@/app/AppProvider';
+import { NoAvatar } from '@/app/components/user-avatar/no-image-avt';
+import ChangePasswordModal from '@/app/components/change-password-modal';
+import { get } from '@/lib/http-client';
+import envConfig from '@/config';
 
 const navLinks: NavLink[] = [
-  { href: '#a', label: 'About' },
-  { href: '#b', label: 'Services' },
   {
-    href: '#c',
-    label: 'Contact',
+    href: '/us-information?tab=intro',
+    label: 'Giới thiệu',
+  },
+  { href: '/us-information?tab=question', label: 'Câu hỏi' },
+  {
+    href: '/us-information?tab=contact',
+    label: 'Liên hệ',
   },
 ];
+
+const baseUrl = envConfig.NEXT_PUBLIC_URL;
 
 function Header() {
   const router = useRouter();
@@ -35,6 +55,7 @@ function Header() {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [openSheet, setOpenSheet] = useState(false);
+  const [openChangePassword, setOpenChangePassword] = useState(false);
 
   const [localUser, setLocalUser] = useState<UserDataType | undefined>(
     undefined,
@@ -48,6 +69,24 @@ function Header() {
   const [searchValue, setSearchValue] = useState('');
 
   const [numberOfCartItems, setNumberOfCartItems] = useState<number>(0);
+
+  const [shopData, setShopData] = useState<ShopDataApiResponse>();
+
+  useEffect(() => {
+    const fetchShopData = async () => {
+      try {
+        const result = await get<ShopDataApiResponse>('/shop/get');
+
+        if (isValue(result)) {
+          setShopData(result);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchShopData().then();
+  }, []);
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -117,22 +156,6 @@ function Header() {
     setIsSearchVisible(!isSearchVisible);
   };
 
-  const handleLogoutFromNextServer = async () => {
-    try {
-      const response = await fetch('/api/logout', {
-        method: 'POST',
-      });
-
-      if (response.ok) {
-        console.log('Xoá cookie thành công');
-      } else {
-        console.error('Xoá cookie thất bại');
-      }
-    } catch (error) {
-      console.error('Lỗi khi Xoá cookie:', error);
-    }
-  };
-
   const handleSearchByKey = (value: string) => {
     setSearchValue(value);
     router.push(
@@ -151,17 +174,72 @@ function Header() {
     );
   };
 
+  const renderSheetContent = () => {
+    if (localUser?.role_id === 1) {
+      return (
+        <div className="flex flex-col gap-2">
+          <Link href={'/admin'} onClick={() => setOpenSheet(false)}>
+            <div className="flex flex-row  items-center gap-4 hover:opacity-50">
+              <UserRoundCog size={16} />
+              <p>Trang quản lý</p>
+            </div>
+          </Link>
+
+          <div
+            onClick={() => setOpenChangePassword(true)}
+            className="flex flex-row  items-center gap-4 hover:opacity-50 cursor-pointer"
+          >
+            <KeyRound size={16} />
+            <p>Đổi mật khẩu</p>
+          </div>
+        </div>
+      );
+    } else if (localUser?.role_id === 3) {
+      return (
+        <div className="flex flex-col gap-2">
+          <Link href={`/order-management`} onClick={() => setOpenSheet(false)}>
+            <div className="flex flex-row  items-center gap-4 hover:opacity-50">
+              <Inbox size={16} />
+              <p>Quản lý đơn hàng</p>
+            </div>
+          </Link>
+
+          <Link
+            href={`/account-management`}
+            onClick={() => setOpenSheet(false)}
+          >
+            <div className="flex flex-row  items-center gap-4 hover:opacity-50">
+              <User size={16} />
+              <p>Thông tin tài khoản</p>
+            </div>
+          </Link>
+
+          <div
+            onClick={() => setOpenChangePassword(true)}
+            className="flex flex-row  items-center gap-4 hover:opacity-50 cursor-pointer"
+          >
+            <KeyRound size={16} />
+            <p>Đổi mật khẩu</p>
+          </div>
+        </div>
+      );
+    }
+  };
+
   return (
     <header className="relative">
       <div>
         <div className="flex px-5">
           <div className="flex w-full bg-[#f5f6f2] justify-between rounded-b-3xl px-2">
             <div className="p-2">
-              <NavLinks links={navLinks} />
+              {pathname.startsWith('/admin') ? null : (
+                <NavLinks links={navLinks} />
+              )}
             </div>
           </div>
         </div>
       </div>
+
       <div
         className={`mx-auto flex px-4 md:px-8 justify-between items-center font-inter top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isSticky
@@ -174,7 +252,11 @@ function Header() {
           <Link href={'/'}>
             <Image
               priority
-              src="https://picsum.photos/id/236/80/80"
+              src={
+                shopData?.logo
+                  ? `${baseUrl}/imgs/products/${shopData?.logo}`
+                  : '/images/no-image.webp'
+              }
               width={80}
               height={80}
               className="cursor-pointer w-16 h-12 md:w-24 md:h-16"
@@ -196,13 +278,14 @@ function Header() {
 
         <div className="flex">
           {pathname.startsWith('/admin') ? null : (
-            <>
+            <div className="flex flex-row mr-2">
               <div
                 className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center md:hidden hover:bg-red-500 cursor-pointer transition-all duration-500 mr-2"
                 onClick={toggleSearch}
               >
                 <Search size={18} />
               </div>
+
               <FiltersModel
                 onFilter={handleFilter}
                 defaultValues={{
@@ -213,7 +296,7 @@ function Header() {
                   categoryId: categorySelected,
                 }}
               />
-            </>
+            </div>
           )}
 
           {localUser?.phone ? (
@@ -221,12 +304,12 @@ function Header() {
               <SheetComponent
                 open={openSheet}
                 onOpenChange={setOpenSheet}
-                childTrigger={<AvatarUser url="" />}
+                childTrigger={<NoAvatar isClickable />}
               >
                 <div className="flex flex-col justify-center gap-4">
                   <div className="flex flex-row gap-4">
                     <div className="flex justify-center items-center">
-                      <AvatarUser url="" />
+                      <NoAvatar />
                     </div>
 
                     <div className="flex flex-col">
@@ -234,19 +317,12 @@ function Header() {
                       <p className="text-sm text-gray-500">{localUser.phone}</p>
                     </div>
                   </div>
-                  {localUser?.role_id === 1 && (
-                    <Link href={'/admin'} onClick={() => setOpenSheet(false)}>
-                      <div className="flex flex-row  items-center gap-4 hover:opacity-50">
-                        <UserRoundCog size={16} />
-                        <p>Trang quản lý</p>
-                      </div>
-                    </Link>
-                  )}
+
+                  {renderSheetContent()}
+
                   <Button
                     onClick={async () => {
-                      resetLocalData();
-
-                      await handleLogoutFromNextServer();
+                      await logout();
 
                       setOpenSheet(false);
                       window.location.reload();
@@ -299,6 +375,13 @@ function Header() {
           </button>
         </div>
       </div>
+
+      <ChangePasswordModal
+        isCustomer={localUser?.role_id === 3}
+        open={openChangePassword}
+        setOpen={setOpenChangePassword}
+        phoneNumber={localUser?.phone || ''}
+      />
     </header>
   );
 }

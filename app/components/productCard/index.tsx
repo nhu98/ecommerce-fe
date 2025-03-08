@@ -4,19 +4,11 @@ import { Product } from '@/app/components/productCategory';
 import Image from 'next/image';
 import { HandCoins, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import envConfig from '@/config';
 import { addToCart, formatPrice } from '@/lib/utils';
 import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
-import { Description } from '@radix-ui/react-dialog';
 import { useAppContext } from '@/app/AppProvider';
 
 interface ProductCardProps {
@@ -29,9 +21,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const router = useRouter();
   const { isActioned, setIsActioned } = useAppContext();
 
-  const [showActions, setShowActions] = useState(false);
+  // const [showActions, setShowActions] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
+  // const [openDialog, setOpenDialog] = useState(false);
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -41,7 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       duration: 3000,
       variant: 'success',
     });
-    setOpenDialog(false);
+    // setOpenDialog(false);
     setIsActioned(!isActioned);
   };
 
@@ -53,8 +45,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <div
       className="rounded-lg relative overflow-hidden"
-      onMouseEnter={() => setShowActions(true)}
-      onMouseLeave={() => setShowActions(false)}
+      // onMouseEnter={() => setShowActions(true)}
+      // onMouseLeave={() => setShowActions(false)}
     >
       <Link href={`/product-detail?id=${product.id}`}>
         <div
@@ -79,61 +71,81 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <h3 className="text-sm font-light cursor-pointer">
           <Link href={`/product-detail?id=${product.id}`}>{product.name}</Link>
         </h3>
-        <div
-          className={`flex justify-between items-center mt-2 ${showActions ? 'animate-slideDown' : ''}`}
-        >
-          {showActions ? (
-            <div className="flex w-full h-10 justify-center">
-              <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                <DialogTrigger asChild>
-                  <Button className="flex text-sm items-center justify-center font-bold w-full bg-red-500 border border-red-500 rounded-lg hover:bg-red-600">
-                    <ShoppingCart
-                      color={'white'}
-                      size={16}
-                      className="flex md:mr-2"
-                    />
-                    <p className="hidden md:flex text-white">Mua ngay</p>
-                  </Button>
-                </DialogTrigger>
+        {/*<div*/}
+        {/*  className={`flex justify-between items-center mt-2 ${showActions ? 'animate-slideDown' : ''}`}*/}
+        {/*>*/}
+        {/*{showActions ? (<div className="flex w-full h-10 justify-center">*/}
+        {/*    <Dialog open={openDialog} onOpenChange={setOpenDialog}>*/}
+        {/*      <DialogTrigger asChild>*/}
+        {/*        <Button*/}
+        {/*          className="flex text-sm items-center justify-center font-bold w-full bg-red-500 border border-red-500 rounded-lg hover:bg-red-600">*/}
+        {/*          <ShoppingCart*/}
+        {/*            color={'white'}*/}
+        {/*            size={16}*/}
+        {/*            className="flex md:mr-2"*/}
+        {/*          />*/}
+        {/*          <p className="hidden md:flex text-white">Mua ngay</p>*/}
+        {/*        </Button>*/}
+        {/*      </DialogTrigger>*/}
 
-                <DialogContent className="">
-                  <DialogHeader className="flex justify-center sm:text-center">
-                    <DialogTitle className="">{product.name}</DialogTitle>
-                    <Description></Description>
-                  </DialogHeader>
-                  <div className="flex gap-4">
-                    <Button
-                      onClick={handleBuyNow}
-                      className="flex text-sm items-center justify-center font-bold w-full bg-red-500 border rounded-lg hover:bg-red-600"
-                    >
-                      <HandCoins
-                        color={'white'}
-                        size={16}
-                        className="flex md:mr-2"
-                      />
-                      <p className="hidden md:flex text-white">Đặt hàng ngay</p>
-                    </Button>
+        {/*      <DialogContent className="">*/}
+        {/*        <DialogHeader className="flex justify-center sm:text-center">*/}
+        {/*          <DialogTitle className="">{product.name}</DialogTitle>*/}
+        {/*          <Description></Description>*/}
+        {/*        </DialogHeader>*/}
+        {/*        <div className="flex gap-4">*/}
+        {/*          <Button*/}
+        {/*            onClick={handleBuyNow}*/}
+        {/*            className="flex text-sm items-center justify-center font-bold w-full bg-red-500 border rounded-lg hover:bg-red-600"*/}
+        {/*          >*/}
+        {/*            <HandCoins*/}
+        {/*              color={'white'}*/}
+        {/*              size={16}*/}
+        {/*              className="flex md:mr-2"*/}
+        {/*            />*/}
+        {/*            <p className="hidden md:flex text-white">Đặt hàng ngay</p>*/}
+        {/*          </Button>*/}
 
-                    <Button
-                      onClick={handleAddToCart}
-                      className="flex text-sm items-center justify-center font-bold w-full bg-gray-100 border rounded-lg hover:bg-gray-300"
-                    >
-                      <ShoppingCart
-                        color={'red'}
-                        size={16}
-                        className="flex md:mr-2"
-                      />
-                      <p className="hidden md:flex text-black">Thêm vào giỏ</p>
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-          ) : (
-            <span className="w-full h-10 text-lg font-medium text-red-500">
-              {formatPrice(product.price)}
-            </span>
-          )}
+        {/*          <Button*/}
+        {/*            onClick={handleAddToCart}*/}
+        {/*            className="flex text-sm items-center justify-center font-bold w-full bg-gray-100 border rounded-lg hover:bg-gray-300"*/}
+        {/*          >*/}
+        {/*            <ShoppingCart*/}
+        {/*              color={'red'}*/}
+        {/*              size={16}*/}
+        {/*              className="flex md:mr-2"*/}
+        {/*            />*/}
+        {/*            <p className="hidden md:flex text-black">Thêm vào giỏ</p>*/}
+        {/*          </Button>*/}
+        {/*        </div>*/}
+        {/*      </DialogContent>*/}
+        {/*    </Dialog>*/}
+        {/*  </div>) : (<span className="w-full h-10 text-lg font-medium text-red-500">*/}
+        {/*    {formatPrice(product.price)}*/}
+        {/*  </span>)}*/}
+        {/*</div>*/}
+        <div className="flex flex-col">
+          <span className="w-full h-10 text-lg font-medium text-red-500">
+            {formatPrice(product.price)}
+          </span>
+
+          <div className="flex flex-col gap-2">
+            <Button
+              onClick={handleBuyNow}
+              className="flex text-sm items-center justify-center font-semibold w-full bg-red-500 border rounded-lg hover:bg-red-600"
+            >
+              <HandCoins color={'white'} size={16} className="flex mr-2" />
+              <p className="text-white">Đặt hàng ngay</p>
+            </Button>
+
+            <Button
+              onClick={handleAddToCart}
+              className="flex text-sm items-center justify-center font-semibold w-full bg-gray-100 border rounded-lg hover:bg-gray-300"
+            >
+              <ShoppingCart color={'red'} size={16} className="flex mr-2" />
+              <p className="text-black">Thêm vào giỏ</p>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

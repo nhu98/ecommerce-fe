@@ -47,7 +47,7 @@ const FiltersModel = ({ onFilter, defaultValues }: FiltersModelProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div className="relative w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center hover:bg-red-500 cursor-pointer transition-all duration-500 mr-2">
+        <div className="relative w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center hover:bg-red-500 cursor-pointer transition-all duration-500">
           <Filter size={18} />
           <Check
             size={18}
@@ -59,7 +59,7 @@ const FiltersModel = ({ onFilter, defaultValues }: FiltersModelProps) => {
 
       <DialogContent className="">
         <DialogHeader className="flex justify-center sm:text-center">
-          <DialogTitle className="">Choose your filters here.</DialogTitle>
+          <DialogTitle className="">Chọn bộ lọc của bạn ở đây</DialogTitle>
           <Description></Description>
         </DialogHeader>
         <Filters onHandleFilter={handleFilter} defaultValues={defaultValues} />

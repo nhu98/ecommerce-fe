@@ -21,12 +21,12 @@ const ProductCategory: React.FC<ProductCategoryProps> = ({
   loadMoreId,
 }) => {
   return (
-    <div className="mt-8">
+    <div className="mt-4 md:mt-8">
       <div className="flex w-full bg-gray-100 py-1 px-2 justify-between mb-4">
         <h2 className="text-xl font-semibold">{categoryName}</h2>
         {loadMoreId && (
           <div className=" hover:underline hover:text-red-500">
-            <Link href={`/products?categoryId=${loadMoreId}`}>Load more</Link>
+            <Link href={`/products?categoryId=${loadMoreId}`}>Xem thêm</Link>
           </div>
         )}
       </div>

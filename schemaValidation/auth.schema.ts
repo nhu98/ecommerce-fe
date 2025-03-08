@@ -7,7 +7,7 @@ export const signInSchema = z.object({
       message: 'Nhập đúng định dạng số điện thoại ',
     })
     .max(11, { message: 'Số điện thoại không vượt quá 11 số' }),
-  password: z.string().min(5, { message: 'Mật khẩu phải có ít nhất 5 ký tự' }),
+  password: z.string().min(6, { message: 'Mật khẩu phải có ít nhất 6 ký tự' }),
 });
 
 export type SignInFormData = z.infer<typeof signInSchema>;
@@ -26,12 +26,12 @@ export const signUpSchema = z.object({
     .max(100, { message: 'Tên không được vượt quá 100 ký tự' })
     .refine((value) => /^[\p{L}\s]+$/u.test(value), {
       message: 'Tên chỉ được chứa chữ cái, dấu tiếng Việt và khoảng trắng',
-    }),
-  email: z
-    .string()
-    .email({ message: 'Email không hợp lệ' })
-    .min(5, { message: 'Email phải có ít nhất 5 ký tự' })
-    .max(255, { message: 'Email không được vượt quá 255 ký tự' }),
+    }), // email: z
+  //   .string()
+  //   .email({ message: 'Email không hợp lệ' })
+  //   .min(5, { message: 'Email phải có ít nhất 5 ký tự' })
+  //   .max(255, { message: 'Email không được vượt quá 255 ký tự' }),
+  email: z.string().optional(),
   city: z.string().min(1, { message: 'Chưa chọn Thành phố / Tỉnh' }),
   district: z.string().min(1, { message: 'Chưa chọn Quận / Huyện' }),
   ward: z.string().min(1, { message: 'Chưa chọn Phường / Xã' }),
@@ -75,6 +75,7 @@ export interface DeleteUserApiResponse {
 
 export interface ProductOrderType {
   product_id: string;
+  product_name: string;
   quantity: number;
 }
 
@@ -260,3 +261,114 @@ export const filterSchema = z.object({
 });
 
 export type FilterFormData = z.infer<typeof filterSchema>;
+
+export const updateOrderStatusSchema = z.object({
+  status: z.string().min(1, {
+    message: 'Hãy chọn trạng thái đơn hàng',
+  }),
+  payment_status: z
+    .string()
+    .min(1, { message: 'Hãy chọn trạng thái thanh toán' }),
+});
+
+export type UpdateOrderStatusFormData = z.infer<typeof updateOrderStatusSchema>;
+
+export interface UpdateOrderResponse {
+  message: string;
+  result: OrderResponse;
+}
+
+export interface ChangPasswordRes {
+  phone: string;
+  password: string;
+  role_id: number;
+  name: string;
+  city: string;
+  district: string;
+  ward: string;
+  street: string;
+  email: string;
+  show: number;
+}
+
+export const changePasswordSchema = z.object({
+  old_password: z
+    .string()
+    .min(6, { message: 'Mật khẩu cũ phải có ít nhất 6 ký tự' }),
+  password: z
+    .string()
+    .min(6, { message: 'Mật khẩu mới phải có ít nhất 6 ký tự' }),
+});
+
+export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+
+export interface ChangePasswordResponse {
+  message: string;
+  result: ChangPasswordRes;
+}
+
+export interface ShopDataApiResponse {
+  name: string;
+  sologan: string;
+  intro: string;
+  question: string;
+  contact: string;
+  logo: string;
+  banner: string;
+}
+
+export const updateShopSchema = z.object({
+  name: z.string().min(1, { message: 'Tên shop phải có ít nhất 1 ký tự' }),
+  sologan: z.string().min(1, { message: 'Slogan phải có ít nhất 1 ký tự' }),
+});
+
+export type UpdateShopFormData = z.infer<typeof updateShopSchema>;
+
+export interface UpdateShopResponse {
+  message: string;
+  result: ShopDataApiResponse;
+}
+
+export const updateContentSchema = z.object({
+  intro: z.string().min(1, { message: 'Intro phải có ít nhất 1 ký tự' }),
+  question: z.string().min(1, { message: 'Question phải có ít nhất 1 ký tự' }),
+  contact: z.string().min(1, { message: 'Contact phải có ít nhất 1 ký tự' }),
+});
+
+export type UpdateContentFormData = z.infer<typeof updateContentSchema>;
+
+export interface UpdateContentResponse {
+  message: string;
+  result: ShopDataApiResponse;
+}
+
+export const updateUserSchema = z.object({
+  phone: z
+    .string()
+    .min(5, {
+      message: 'Số điện thoại không hợp lệ',
+    })
+    .max(11, { message: 'Số điện thoại không vượt quá 11 số' }),
+  name: z
+    .string()
+    .min(2, { message: 'Tên phải có ít nhất 2 ký tự' })
+    .max(100, { message: 'Tên không được vượt quá 100 ký tự' })
+    .refine((value) => /^[\p{L}\s]+$/u.test(value), {
+      message: 'Tên chỉ được chứa chữ cái, dấu tiếng Việt và khoảng trắng',
+    }),
+  email: z.string().optional(),
+  city: z.string().min(1, { message: 'Chưa chọn Thành phố / Tỉnh' }),
+  district: z.string().min(1, { message: 'Chưa chọn Quận / Huyện' }),
+  ward: z.string().min(1, { message: 'Chưa chọn Phường / Xã' }),
+  street: z
+    .string()
+    .min(2, { message: 'Số nhà / Đường phải có ít nhất 2 ký tự' })
+    .max(200, { message: 'Số nhà / Đường không được vượt quá 200 ký tự' }),
+});
+
+export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
+
+export interface UpdateUserResponse {
+  message: string;
+  result: ChangPasswordRes;
+}

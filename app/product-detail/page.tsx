@@ -67,7 +67,7 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 min-h-[50vh]">
       <div className="bg-gray-100 py-1 px-2 flex flex-col justify-center mb-4">
         <h2 className="text-xl font-semibold">Chi tiết sản phẩm</h2>
       </div>

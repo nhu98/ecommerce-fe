@@ -1,14 +1,43 @@
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import BlurFade from '@/components/magicui/blur-fade';
+import { ShopDataApiResponse } from '@/schemaValidation/auth.schema';
+import { get } from '@/lib/http-client';
+import { isValue } from '@/lib/utils';
+import envConfig from '@/config';
+
+const baseUrl = envConfig.NEXT_PUBLIC_URL;
 
 const Banner = () => {
+  const [shopData, setShopData] = useState<ShopDataApiResponse>();
+
+  useEffect(() => {
+    const fetchShopData = async () => {
+      try {
+        const result = await get<ShopDataApiResponse>('/shop/get');
+
+        if (isValue(result)) {
+          setShopData(result);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchShopData().then();
+  }, []);
+
   return (
     <BlurFade delay={0} duration={2} inView>
       <section id="banner" className={`relative h-[485px] md:h-[575px]`}>
         <Image
           priority
-          src="https://picsum.photos/id/233/1920/1080"
+          src={
+            shopData?.banner
+              ? `${baseUrl}/imgs/products/${shopData?.banner}`
+              : '/images/no-image.webp'
+          }
           fill
           sizes={'(max-width: 768px) 100vw, 50vw'}
           alt={'banner'}

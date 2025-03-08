@@ -2,7 +2,9 @@ import {
   Airplay,
   ChartBarStacked,
   Inbox,
+  LayoutDashboard,
   PackageSearch,
+  TableOfContents,
   Users,
 } from 'lucide-react';
 
@@ -25,12 +27,12 @@ const items = [
     icon: PackageSearch,
   },
   {
-    title: 'Quản lý danh mục sản phẩm',
+    title: 'Quản lý danh mục',
     url: '/admin/categories',
     icon: ChartBarStacked,
   },
   {
-    title: 'Quản lý thương hiệu sản phẩm',
+    title: 'Quản lý thương hiệu',
     url: '/admin/brands',
     icon: Airplay,
   },
@@ -40,9 +42,19 @@ const items = [
     icon: Inbox,
   },
   {
-    title: 'Quản lý tài khoản',
+    title: 'Quản lý khách hàng',
     url: '/admin/accounts',
     icon: Users,
+  },
+  {
+    title: 'Quản lý giao diện',
+    url: '/admin/layout-management',
+    icon: LayoutDashboard,
+  },
+  {
+    title: 'Quản lý nội dung',
+    url: '/admin/content-management',
+    icon: TableOfContents,
   },
 ];
 

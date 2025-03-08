@@ -14,8 +14,9 @@ import { del, get } from '@/lib/http-client';
 import { toast } from '@/components/ui/use-toast';
 import SearchBox from '@/app/admin/accounts/components/search-box';
 import AddProductModal from '@/app/admin/components/add-product-modal';
-import { Plus } from 'lucide-react';
+import { Ban, Plus } from 'lucide-react';
 import FiltersModel from '@/app/components/filters-modal';
+import { TooltipComponent } from '@/app/components/tooltip';
 
 export default function Product() {
   const [loading, setLoading] = useState(false);
@@ -149,7 +150,7 @@ export default function Product() {
   };
 
   const handleSearchById = (value: string) => {
-    if (value) {
+    if (value && value.trim().length > 0) {
       fetchProductById(value.trim()).then();
     } else {
       window.location.reload();
@@ -207,7 +208,7 @@ export default function Product() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-h-[50vh]">
       <div className="wrapper overflow-x-hidden m-4 md:m-8">
         <h2 className="text-2xl font-bold mb-4">Quản lý sản phẩm</h2>
 
@@ -227,7 +228,7 @@ export default function Product() {
               />
             </div>
 
-            <div className="flex self-start ">
+            <div className="flex flex-row self-start justify-between gap-4">
               <FiltersModel
                 onFilter={handleFilter}
                 defaultValues={{
@@ -237,6 +238,18 @@ export default function Product() {
                   brandId: brandSelected,
                   categoryId: categorySelected,
                 }}
+              />
+
+              <TooltipComponent
+                childrenTrigger={
+                  <div
+                    onClick={handleRefresh}
+                    className="relative w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center hover:bg-red-500 cursor-pointer transition-all duration-500 mr-2"
+                  >
+                    <Ban size={18} />
+                  </div>
+                }
+                content="Loại bỏ tìm kiếm và bộ lọc"
               />
             </div>
           </div>

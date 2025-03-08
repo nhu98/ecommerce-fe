@@ -21,7 +21,6 @@ const ProductCard = ({
   handleRemove,
   handleRefresh,
 }: ProductCardProps) => {
-  console.log('Img', `${baseUrl}/imgs/products/${item.img1}`);
   return (
     <div
       key={item.id}

@@ -1,7 +1,6 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { UserRound, X } from 'lucide-react';
 import { UserDataType } from '@/schemaValidation/auth.schema';
-import { AvatarUser } from '@/app/components/user-avatar';
 import ConfirmModal from '@/app/components/confirm-modal';
 
 interface AccountCardProps {
@@ -16,7 +15,10 @@ const AccountCard = ({ item, handleRemove }: AccountCardProps) => {
       className="flex w-full justify-between items-center mb-4 p-2 border-b"
     >
       <div>
-        <AvatarUser className="h-16 w-16" url="" />
+        {/*<AvatarUser className="h-16 w-16" url="" />*/}
+        <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+          <UserRound size={24} />
+        </div>
       </div>
 
       <div className="w-1/2 break-words">

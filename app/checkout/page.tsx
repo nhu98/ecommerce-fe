@@ -18,13 +18,11 @@ import DistrictSelect from '@/app/components/district-select';
 import WardSelect from '@/app/components/ward-select';
 import LoaderComponent from '@/app/components/loader';
 import { post } from '@/lib/http-client';
-import { toast } from '@/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/app/AppProvider';
 import { UserDataType } from '@/schemaValidation/auth.schema';
+import InfoModal from '@/app/components/info-modal';
 
 const Checkout: React.FC = () => {
-  const router = useRouter();
   const { isActioned, setIsActioned } = useAppContext();
 
   const {
@@ -45,6 +43,9 @@ const Checkout: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
+
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const [orderId, setOrderId] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -106,18 +107,20 @@ const Checkout: React.FC = () => {
       const result = await post<CreateOrderApiResponse>('/order/create', body);
 
       if (result?.id) {
-        toast({
-          title: 'Thông báo',
-          description:
-            'Đặt hàng thành công, liên hệ với shop để biết thêm thông tin! ',
-          variant: 'success',
-          duration: 5000,
-        });
+        // toast({
+        //   title: 'Thông báo',
+        //   description:
+        //     'Đặt hàng thành công, liên hệ với shop để biết thêm thông tin! ',
+        //   variant: 'success',
+        //   duration: 5000,
+        // });
 
+        setOrderId(result.id);
         localStorage.removeItem('cart');
         setCartItems([]);
         setIsActioned(!isActioned);
-        router.push('/');
+        setOpenSuccessModal(true);
+        // router.push('/');
       }
     } catch (error) {
       console.log(error);
@@ -127,7 +130,7 @@ const Checkout: React.FC = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 w-full min-h-[50vh]">
       {cartItems.length === 0 ? (
         <div className="flex justify-center items-center">
           <h2 className="text-xl font-semibold mb-4">Giỏ hàng trống</h2>
@@ -140,10 +143,12 @@ const Checkout: React.FC = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="flex flex-col md:flex-row justify-between">
               <div className="w-full md:w-2/3 p-4">
-                <div className="">
+                <div className="flex flex-col space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="name">Họ và tên</Label>
+                    <div className="grid gap-1">
+                      <Label className="flex flex-row" htmlFor="name">
+                        Tên<p className="text-red-500 ml-1">*</p>
+                      </Label>
                       <Input
                         id="name"
                         placeholder="Họ và tên"
@@ -153,8 +158,10 @@ const Checkout: React.FC = () => {
                         <p className="text-red-500">{errors.name.message}</p>
                       )}
                     </div>
-                    <div>
-                      <Label htmlFor="lastName">Số điện thoại</Label>
+                    <div className="grid gap-1">
+                      <Label className="flex flex-row" htmlFor="phoneNumber">
+                        Số điện thoại<p className="text-red-500 ml-1">*</p>
+                      </Label>
                       <Input
                         id="customer_phone"
                         placeholder="Số điện thoại"
@@ -168,7 +175,7 @@ const Checkout: React.FC = () => {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="grid gap-1">
                     <Label htmlFor="street">Email</Label>
                     <Input
                       id="email"
@@ -180,8 +187,10 @@ const Checkout: React.FC = () => {
                     )}
                   </div>
 
-                  <div>
-                    <Label htmlFor="city">Thành phố / Tỉnh</Label>
+                  <div className="grid gap-1">
+                    <Label className="flex flex-row" htmlFor="city">
+                      Thành phố / Tỉnh<p className="text-red-500 ml-1">*</p>
+                    </Label>
                     <CitySelect
                       onChange={(value) => {
                         setValue('city', value.name);
@@ -197,8 +206,10 @@ const Checkout: React.FC = () => {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="district">Quận / Huyện</Label>
+                    <div className="grid gap-1">
+                      <Label className="flex flex-row" htmlFor="district">
+                        Quận / Huyện<p className="text-red-500 ml-1">*</p>
+                      </Label>
                       <DistrictSelect
                         onChange={(value) => {
                           setValue('district', value.name);
@@ -215,8 +226,10 @@ const Checkout: React.FC = () => {
                         </p>
                       )}
                     </div>
-                    <div>
-                      <Label htmlFor="ward">Phường / Xã</Label>
+                    <div className="grid gap-1">
+                      <Label className="flex flex-row" htmlFor="ward">
+                        Phường / Xã<p className="text-red-500 ml-1">*</p>
+                      </Label>
                       <WardSelect
                         onChange={(value) => {
                           setValue('ward', value);
@@ -232,8 +245,10 @@ const Checkout: React.FC = () => {
                     </div>
                   </div>
 
-                  <div>
-                    <Label htmlFor="street">Số nhà / Đường</Label>
+                  <div className="grid gap-1">
+                    <Label className="flex flex-row" htmlFor="street">
+                      Số nhà / Đường<p className="text-red-500 ml-1">*</p>
+                    </Label>
                     <Input
                       id="street"
                       placeholder="Nhập số nhà tên đường"
@@ -286,6 +301,11 @@ const Checkout: React.FC = () => {
         </>
       )}
       {loading && <LoaderComponent />}
+      <InfoModal
+        open={openSuccessModal}
+        setOpen={setOpenSuccessModal}
+        id={orderId}
+      />
     </div>
   );
 };

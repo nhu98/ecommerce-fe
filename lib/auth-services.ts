@@ -11,7 +11,7 @@ export const getUerInfo = async (phoneNumber: string) => {
 
     if (!getMeRes.phone) {
       toast({
-        title: 'Error',
+        title: 'Lỗi',
         description: 'Lấy thông tin người dùng không thành công!',
         variant: 'destructive',
         duration: 3000,

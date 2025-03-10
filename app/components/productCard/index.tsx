@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Product } from '@/app/components/productCategory';
 import Image from 'next/image';
-import { HandCoins, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import envConfig from '@/config';
@@ -43,15 +42,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <div
-      className="rounded-lg relative overflow-hidden"
-      // onMouseEnter={() => setShowActions(true)}
-      // onMouseLeave={() => setShowActions(false)}
-    >
+    <div className="rounded-lg relative overflow-hidden">
       <Link href={`/product-detail?id=${product.id}`}>
         <div
           className={`relative overflow-hidden rounded-t-lg w-full h-56 ${isHovered ? 'scale-105 transition-transform duration-300' : 'scale-100 transition-transform duration-300'}`}
-          onMouseEnter={() => setIsHovered(true)} // Bắt sự kiện hover trên ảnh
+          onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
           <Image
@@ -63,70 +58,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             alt={product.name}
             sizes={'(max-width: 768px) 100vw, 50vw'}
             className="cursor-pointer object-cover"
-            fill // Sử dụng fill để lấp đầy container
+            fill
           />
         </div>
       </Link>
       <div className="p-4 relative">
-        <h3 className="text-sm font-light cursor-pointer">
-          <Link href={`/product-detail?id=${product.id}`}>{product.name}</Link>
+        <h3 className="text-sm font-light cursor-pointer break-words h-10 overflow-hidden">
+          <Link
+            href={`/product-detail?id=${product.id}`}
+            className="line-clamp-2"
+          >
+            {product.name}
+          </Link>
         </h3>
-        {/*<div*/}
-        {/*  className={`flex justify-between items-center mt-2 ${showActions ? 'animate-slideDown' : ''}`}*/}
-        {/*>*/}
-        {/*{showActions ? (<div className="flex w-full h-10 justify-center">*/}
-        {/*    <Dialog open={openDialog} onOpenChange={setOpenDialog}>*/}
-        {/*      <DialogTrigger asChild>*/}
-        {/*        <Button*/}
-        {/*          className="flex text-sm items-center justify-center font-bold w-full bg-red-500 border border-red-500 rounded-lg hover:bg-red-600">*/}
-        {/*          <ShoppingCart*/}
-        {/*            color={'white'}*/}
-        {/*            size={16}*/}
-        {/*            className="flex md:mr-2"*/}
-        {/*          />*/}
-        {/*          <p className="hidden md:flex text-white">Mua ngay</p>*/}
-        {/*        </Button>*/}
-        {/*      </DialogTrigger>*/}
 
-        {/*      <DialogContent className="">*/}
-        {/*        <DialogHeader className="flex justify-center sm:text-center">*/}
-        {/*          <DialogTitle className="">{product.name}</DialogTitle>*/}
-        {/*          <Description></Description>*/}
-        {/*        </DialogHeader>*/}
-        {/*        <div className="flex gap-4">*/}
-        {/*          <Button*/}
-        {/*            onClick={handleBuyNow}*/}
-        {/*            className="flex text-sm items-center justify-center font-bold w-full bg-red-500 border rounded-lg hover:bg-red-600"*/}
-        {/*          >*/}
-        {/*            <HandCoins*/}
-        {/*              color={'white'}*/}
-        {/*              size={16}*/}
-        {/*              className="flex md:mr-2"*/}
-        {/*            />*/}
-        {/*            <p className="hidden md:flex text-white">Đặt hàng ngay</p>*/}
-        {/*          </Button>*/}
-
-        {/*          <Button*/}
-        {/*            onClick={handleAddToCart}*/}
-        {/*            className="flex text-sm items-center justify-center font-bold w-full bg-gray-100 border rounded-lg hover:bg-gray-300"*/}
-        {/*          >*/}
-        {/*            <ShoppingCart*/}
-        {/*              color={'red'}*/}
-        {/*              size={16}*/}
-        {/*              className="flex md:mr-2"*/}
-        {/*            />*/}
-        {/*            <p className="hidden md:flex text-black">Thêm vào giỏ</p>*/}
-        {/*          </Button>*/}
-        {/*        </div>*/}
-        {/*      </DialogContent>*/}
-        {/*    </Dialog>*/}
-        {/*  </div>) : (<span className="w-full h-10 text-lg font-medium text-red-500">*/}
-        {/*    {formatPrice(product.price)}*/}
-        {/*  </span>)}*/}
-        {/*</div>*/}
         <div className="flex flex-col">
-          <span className="w-full h-10 text-lg font-medium text-red-500">
-            {formatPrice(product.price)}
+          <span className="w-full h-10 text-lg font-medium text-red-500 break-words overflow-hidden">
+            <span className="line-clamp-2">{formatPrice(product.price)}</span>
           </span>
 
           <div className="flex flex-col gap-2">
@@ -134,16 +82,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               onClick={handleBuyNow}
               className="flex text-sm items-center justify-center font-semibold w-full bg-red-500 border rounded-lg hover:bg-red-600"
             >
-              <HandCoins color={'white'} size={16} className="flex mr-2" />
-              <p className="text-white">Đặt hàng ngay</p>
+              <p className="text-sm text-white">Đặt hàng ngay</p>
             </Button>
 
             <Button
               onClick={handleAddToCart}
               className="flex text-sm items-center justify-center font-semibold w-full bg-gray-100 border rounded-lg hover:bg-gray-300"
             >
-              <ShoppingCart color={'red'} size={16} className="flex mr-2" />
-              <p className="text-black">Thêm vào giỏ</p>
+              <p className="text-sm text-black">Thêm vào giỏ</p>
             </Button>
           </div>
         </div>

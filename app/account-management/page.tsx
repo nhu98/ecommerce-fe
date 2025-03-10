@@ -14,20 +14,17 @@ import CitySelect from '@/app/components/city-select';
 import DistrictSelect from '@/app/components/district-select';
 import WardSelect from '@/app/components/ward-select';
 import { Button } from '@/components/ui/button';
-import { get, put } from '@/lib/http-client';
+import { put } from '@/lib/http-client';
 import { toast } from '@/components/ui/use-toast';
 import { getLocalUser } from '@/lib/utils';
+import { useUser } from '@/lib/useUser';
+import { useAddress } from '@/lib/useAddress';
+import LoaderComponent from '@/app/components/loader';
 
 export default function AccountManagement() {
-  const [loading, setLoading] = useState(false);
   const [localUser, setLocalUser] = useState<UserDataType | undefined>(
     undefined,
   );
-
-  const [user, setUser] = useState<UserDataType>();
-
-  const [selectedCity, setSelectedCity] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
 
   const {
     register,
@@ -38,37 +35,32 @@ export default function AccountManagement() {
     resolver: zodResolver(updateUserSchema),
   });
 
-  useEffect(() => {
-    const fetchUserByPhone = async () => {
-      if (loading) return;
-      setLoading(true);
-      try {
-        const result = await get<UserDataType>('/users/getByPhone', {
-          phone: localUser?.phone || '',
-        });
-        if (result?.phone) {
-          setUser(result);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const {
+    selectedCity,
+    setSelectedCity,
+    selectedDistrict,
+    setSelectedDistrict,
+    cityDefault,
+    setCityDefault,
+    districtDefault,
+    setDistrictDefault,
+    wardDefault,
+    setWardDefault,
+  } = useAddress(localUser?.city, localUser?.district);
 
-    if (localUser?.phone) {
-      fetchUserByPhone().then();
-    }
-  }, [localUser?.phone]);
+  const { user, loading, setLoading } = useUser(localUser?.phone);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setLocalUser(getLocalUser());
+      setCityDefault(getLocalUser()?.city || '');
+      setDistrictDefault(getLocalUser()?.district || '');
+      setWardDefault(getLocalUser()?.ward || '');
     }
   }, []);
 
   useEffect(() => {
-    if (localUser?.phone) {
+    if (user?.phone) {
       setValue('name', user?.name || '');
       setValue('phone', user?.phone || '');
       setValue('email', user?.email || '');
@@ -80,18 +72,18 @@ export default function AccountManagement() {
   }, [user]);
 
   const onSubmit = async (data: UpdateUserFormData) => {
-    if (localUser?.phone) {
+    if (user?.phone) {
       if (loading) return;
       setLoading(true);
       try {
         const result = await put<UpdateUserResponse>(
-          `/users/update?phone=${localUser?.phone}`,
+          `/users/update?phone=${user?.phone}`,
           data,
         );
 
         if (result?.result.phone) {
           toast({
-            title: 'Success',
+            title: 'Thành công',
             description: 'Cập nhật thông tin thành công!',
             variant: 'success',
             duration: 3000,
@@ -108,7 +100,7 @@ export default function AccountManagement() {
   const renderContent = () => {
     if (loading) {
       return <></>;
-    } else if (!localUser?.phone) {
+    } else if (!user?.phone) {
       return (
         <div className="flex flex-col items-center">
           <p className="text-lg">Không có thông tin tài khoản!</p>
@@ -125,7 +117,7 @@ export default function AccountManagement() {
                 Số điện thoại<p className="text-red-500 ml-1">*</p>
               </Label>
               <Input
-                disabled={loading}
+                disabled={true}
                 id="phoneNumber"
                 type="tel"
                 {...register('phone')}
@@ -170,12 +162,19 @@ export default function AccountManagement() {
               <CitySelect
                 onChange={(value) => {
                   setValue('city', value.name);
+                  setValue('district', '');
+                  setValue('ward', '');
+
+                  setCityDefault('');
+                  setDistrictDefault('');
+                  setWardDefault('');
+
+                  setSelectedDistrict('');
                   setSelectedCity(value.id);
                 }}
                 register={register}
                 name="city"
-                disabled={loading}
-                defaultValue={localUser?.city}
+                defaultValue={cityDefault}
               />
               {errors.city && (
                 <p className="text-red-500">{errors.city.message}</p>
@@ -194,8 +193,7 @@ export default function AccountManagement() {
                 register={register}
                 name="district"
                 cityId={selectedCity}
-                disabled={loading}
-                defaultValue={localUser?.district}
+                defaultValue={districtDefault}
               />
               {errors.district && (
                 <p className="text-red-500">{errors.district.message}</p>
@@ -208,13 +206,12 @@ export default function AccountManagement() {
               </Label>
               <WardSelect
                 onChange={(value) => {
-                  setValue('ward', value);
+                  setValue('ward', value.name);
                 }}
                 register={register}
                 name="ward"
                 districtId={selectedDistrict}
-                disabled={loading}
-                defaultValue={localUser?.ward}
+                defaultValue={wardDefault}
               />
               {errors.ward && (
                 <p className="text-red-500">{errors.ward.message}</p>
@@ -273,7 +270,7 @@ export default function AccountManagement() {
           {renderContent()}
         </div>
       </div>
-      {/*{loading && <LoaderComponent />}*/}
+      {loading && <LoaderComponent />}
     </div>
   );
 }

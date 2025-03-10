@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss';
 import animate from 'tailwindcss-animate';
+import lineClamp from '@tailwindcss/line-clamp';
 
 export default {
   content: [
@@ -52,5 +53,5 @@ export default {
       },
     },
   },
-  plugins: [animate],
+  plugins: [animate, lineClamp],
 } satisfies Config;

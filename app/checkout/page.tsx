@@ -21,6 +21,7 @@ import { post } from '@/lib/http-client';
 import { useAppContext } from '@/app/AppProvider';
 import { UserDataType } from '@/schemaValidation/auth.schema';
 import InfoModal from '@/app/components/info-modal';
+import { useAddress } from '@/lib/useAddress';
 
 const Checkout: React.FC = () => {
   const { isActioned, setIsActioned } = useAppContext();
@@ -41,27 +42,41 @@ const Checkout: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [selectedCity, setSelectedCity] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
 
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [orderId, setOrderId] = useState('');
 
+  const {
+    selectedCity,
+    setSelectedCity,
+    selectedDistrict,
+    setSelectedDistrict,
+    cityDefault,
+    setCityDefault,
+    districtDefault,
+    setDistrictDefault,
+    wardDefault,
+    setWardDefault,
+  } = useAddress(localUser?.city, localUser?.district);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setLocalUser(getLocalUser());
+      setCityDefault(getLocalUser()?.city || '');
+      setDistrictDefault(getLocalUser()?.district || '');
+      setWardDefault(getLocalUser()?.ward || '');
     }
   }, []);
 
   useEffect(() => {
     if (localUser) {
-      setValue('name', localUser.name);
-      setValue('email', localUser.email);
-      setValue('customer_phone', localUser.phone);
-      setValue('street', localUser.street);
-      setValue('city', localUser.city);
-      setValue('district', localUser.district);
-      setValue('ward', localUser.ward);
+      setValue('name', localUser.name || '');
+      setValue('email', localUser.email || '');
+      setValue('customer_phone', localUser.phone || '');
+      setValue('street', localUser.street || '');
+      setValue('city', localUser.city || '');
+      setValue('district', localUser.district || '');
+      setValue('ward', localUser.ward || '');
     }
   }, [localUser, setValue]);
 
@@ -154,9 +169,6 @@ const Checkout: React.FC = () => {
                         placeholder="Họ và tên"
                         {...register('name')}
                       />
-                      {errors.name && (
-                        <p className="text-red-500">{errors.name.message}</p>
-                      )}
                     </div>
                     <div className="grid gap-1">
                       <Label className="flex flex-row" htmlFor="phoneNumber">
@@ -167,12 +179,15 @@ const Checkout: React.FC = () => {
                         placeholder="Số điện thoại"
                         {...register('customer_phone')}
                       />
-                      {errors.customer_phone && (
-                        <p className="text-red-500">
-                          {errors.customer_phone.message}
-                        </p>
-                      )}
                     </div>
+                    {errors.name && (
+                      <p className="text-red-500">{errors.name.message}</p>
+                    )}
+                    {errors.customer_phone && (
+                      <p className="text-red-500">
+                        {errors.customer_phone.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="grid gap-1">
@@ -194,11 +209,19 @@ const Checkout: React.FC = () => {
                     <CitySelect
                       onChange={(value) => {
                         setValue('city', value.name);
+                        setValue('district', '');
+                        setValue('ward', '');
+
+                        setCityDefault('');
+                        setDistrictDefault('');
+                        setWardDefault('');
+
+                        setSelectedDistrict('');
                         setSelectedCity(value.id);
                       }}
                       register={register}
                       name="city"
-                      defaultValue={localUser?.city}
+                      defaultValue={cityDefault}
                     />
                     {errors.city && (
                       <p className="text-red-500">{errors.city.message}</p>
@@ -218,13 +241,8 @@ const Checkout: React.FC = () => {
                         register={register}
                         name="district"
                         cityId={selectedCity}
-                        defaultValue={localUser?.district}
+                        defaultValue={districtDefault}
                       />
-                      {errors.district && (
-                        <p className="text-red-500">
-                          {errors.district.message}
-                        </p>
-                      )}
                     </div>
                     <div className="grid gap-1">
                       <Label className="flex flex-row" htmlFor="ward">
@@ -232,17 +250,20 @@ const Checkout: React.FC = () => {
                       </Label>
                       <WardSelect
                         onChange={(value) => {
-                          setValue('ward', value);
+                          setValue('ward', value.name);
                         }}
                         register={register}
                         name="ward"
                         districtId={selectedDistrict}
-                        defaultValue={localUser?.ward}
+                        defaultValue={wardDefault}
                       />
-                      {errors.ward && (
-                        <p className="text-red-500">{errors.ward.message}</p>
-                      )}
                     </div>
+                    {errors.district && (
+                      <p className="text-red-500">{errors.district.message}</p>
+                    )}
+                    {errors.ward && (
+                      <p className="text-red-500">{errors.ward.message}</p>
+                    )}
                   </div>
 
                   <div className="grid gap-1">

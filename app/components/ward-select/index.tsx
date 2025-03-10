@@ -20,7 +20,7 @@ interface Ward {
 }
 
 interface WardSelectProps<T extends FieldValues> {
-  onChange: (value: string) => void;
+  onChange: (value: { id: string; name: string }) => void;
   register: UseFormRegister<T>;
   name: keyof T;
   districtId: string;
@@ -46,31 +46,49 @@ const WardSelect = <T extends FieldValues>({
         );
         if (!response.ok) {
           toast({
-            title: 'Error',
-            description: `Error fetching wards ${response.status}`,
+            title: 'Lỗi',
+            description: `Lỗi lấy dữ liệu ${response.status}`,
             variant: 'destructive',
             duration: 3000,
           });
         }
         const data = await response.json();
-        setWards(data.data);
+        const wards: Ward[] = data.data;
+
+        setWards(wards);
       } catch (error) {
         toast({
-          title: 'Error',
-          description: `Error fetching wards ${error}`,
+          title: 'Lỗi',
+          description: `Lỗi lấy dữ liệu ${error}`,
           variant: 'destructive',
           duration: 3000,
         });
       }
     };
 
-    if (districtId) fetchWards();
+    if (districtId) {
+      fetchWards();
+    } else if (!districtId) {
+      setWards([]);
+    }
   }, [districtId]);
 
+  const handleWardChange = (wardName: string) => {
+    const selectedWard = wards.find((ward) => ward.name === wardName);
+
+    if (selectedWard) {
+      onChange({ id: selectedWard.id, name: selectedWard.name });
+    }
+  };
+
   return (
-    <Select disabled={disabled} onValueChange={onChange}>
+    <Select
+      defaultValue={defaultValue || ''}
+      disabled={disabled}
+      onValueChange={handleWardChange}
+    >
       <SelectTrigger className="" {...register(name as Path<T>)}>
-        <SelectValue placeholder={defaultValue || 'Chọn Phường / Xã'} />
+        <SelectValue placeholder={'Chọn Phường / Xã'} />
       </SelectTrigger>
       <SelectContent className="bg-white">
         {wards?.map((ward) => (

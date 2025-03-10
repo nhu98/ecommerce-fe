@@ -164,7 +164,7 @@ const Cart: React.FC = () => {
               disabled={calculateTotal() === 0}
               className={` ${calculateTotal() === 0 ? 'opacity-50' : ''} w-full mt-8 bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded`}
             >
-              Thanh toán
+              Đặt hàng
             </Button>
           </div>
         </div>

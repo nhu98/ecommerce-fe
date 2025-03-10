@@ -127,7 +127,7 @@ export default function Brands() {
       if (result?.id) {
         setOpenAddModal(false);
         toast({
-          title: 'Success',
+          title: 'Thành công',
           description: 'Thêm thương hiệu thành công!',
           variant: 'success',
           duration: 3000,
@@ -156,7 +156,7 @@ export default function Brands() {
       if (result?.result?.id) {
         setOpenUpdateModal(false);
         toast({
-          title: 'Success',
+          title: 'Thành công',
           description: 'Cập nhật thương hiệu thành công!',
           variant: 'success',
           duration: 3000,

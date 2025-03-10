@@ -54,7 +54,7 @@ const SignInCard = ({ onClose }: SignInCardProps) => {
 
         if (!decoded?.phone) {
           toast({
-            title: 'Error',
+            title: 'Lỗi',
             description: 'Không có thông tin người dùng!',
             variant: 'destructive',
             duration: 3000,
@@ -63,23 +63,25 @@ const SignInCard = ({ onClose }: SignInCardProps) => {
           return;
         }
 
+        await getUerInfo(decoded.phone);
+
+        toast({
+          title: 'Thành công',
+          description: 'Đăng nhập thành công!',
+          variant: 'success',
+          duration: 3000,
+        });
+
         if (decoded?.role_id === 1) {
           router.push('/admin');
         } else if (decoded?.role_id === 3) {
           router.push('/');
         }
 
-        await getUerInfo(decoded.phone);
-
-        toast({
-          title: 'Success',
-          description: 'Đăng nhập thành công!',
-          variant: 'success',
-          duration: 3000,
-        });
-
         onClose();
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
       }
     } catch (error) {
       console.error('Error during signIn:', error);
@@ -98,11 +100,11 @@ const SignInCard = ({ onClose }: SignInCardProps) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardContent className="space-y-2">
           <div className="space-y-1">
-            <Label htmlFor="username">{'Tên đăng nhập'}</Label>
+            <Label htmlFor="username">{'Số điện thoại'}</Label>
             <Input
               disabled={loading}
               id="username"
-              placeholder="Nhập tài khoản"
+              placeholder="Nhập số điện thoại"
               {...register('username')}
             />
             {errors.username && (

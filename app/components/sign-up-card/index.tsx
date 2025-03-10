@@ -57,7 +57,7 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
 
         if (!decoded?.phone) {
           toast({
-            title: 'Error',
+            title: 'lỗi',
             description: 'Không có thông tin người dùng!',
             variant: 'destructive',
             duration: 3000,
@@ -69,7 +69,7 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
         await getUerInfo(decoded.phone);
 
         toast({
-          title: 'Success',
+          title: 'Thành công',
           description: 'Đăng ký thành công!',
           variant: 'success',
           duration: 3000,
@@ -205,7 +205,7 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
             </Label>
             <WardSelect
               onChange={(value) => {
-                setValue('ward', value);
+                setValue('ward', value.name);
               }}
               register={register}
               name="ward"

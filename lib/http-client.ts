@@ -28,7 +28,7 @@ async function request<T>(
     });
 
     if (!response.ok) {
-      let errorMessage = `Something went wrong! Error Status: ${response.status}`;
+      let errorMessage = `Có gì đó không ổn! Trạng thái lỗi: ${response.status}`;
       try {
         const errorText = await response.clone().text();
 
@@ -40,26 +40,25 @@ async function request<T>(
               await logout();
               window.location.reload();
             } else {
-              errorMessage = `Bad Request: ${errorText}`;
+              errorMessage = `Yêu cầu không hợp lệ: ${errorText}`;
             }
             break;
           case 401:
             localStorage.removeItem('sessionToken');
-            errorMessage = 'You are not authorized to access this resource.';
+            errorMessage = 'Bạn không được phép truy cập vào tài nguyên này.';
             break;
           case 403:
-            errorMessage =
-              'You do not have permission to access this resource.';
+            errorMessage = 'Bạn không có quyền truy cập vào tài nguyên này.';
             break;
           case 404:
-            errorMessage = 'The requested resource was not found.';
+            errorMessage = 'Không tìm thấy tài nguyên được yêu cầu.';
             break;
           case 500:
             if (errorText) {
-              errorMessage = `Internal Server Error: ${errorText}`;
+              errorMessage = `Lỗi máy chủ nội bộ: ${errorText}`;
             } else {
               errorMessage =
-                'Internal Server Error. Please check the console for details.';
+                'Lỗi máy chủ nội bộ. Vui lòng kiểm tra bảng điều khiển để biết chi tiết.';
             }
             break;
         }
@@ -68,7 +67,7 @@ async function request<T>(
       }
 
       toast({
-        title: 'Error',
+        title: 'Lỗi',
         description: errorMessage,
         variant: 'destructive',
         duration: 3000,
@@ -79,8 +78,8 @@ async function request<T>(
     }
   } catch (error) {
     toast({
-      title: 'Error',
-      description: 'Something went wrong! Please try again later.',
+      title: 'Lỗi',
+      description: 'Có lỗi xảy ra! Vui lòng thử lại sau!',
       variant: 'destructive',
       duration: 3000,
     });
@@ -155,11 +154,9 @@ async function requestWithFormData<T>(
     });
 
     if (!response.ok) {
-      let errorMessage = `Something went wrong! Error Status: ${response.status}`;
+      let errorMessage = `Có gì đó không ổn! Trạng thái lỗi: ${response.status}`;
       try {
         const errorText = await response.clone().text();
-
-        console.log('Error Text:', errorText);
 
         switch (response.status) {
           case 400:
@@ -168,25 +165,24 @@ async function requestWithFormData<T>(
               window.location.reload();
             }
 
-            errorMessage = `Bad Request: ${errorText}`;
+            errorMessage = `Yêu cầu không hợp lệ: ${errorText}`;
             break;
           case 401:
             localStorage.removeItem('sessionToken');
-            errorMessage = 'You are not authorized to access this resource.';
+            errorMessage = 'Bạn không được phép truy cập vào tài nguyên này.';
             break;
           case 403:
-            errorMessage =
-              'You do not have permission to access this resource.';
+            errorMessage = 'Bạn không có quyền truy cập vào tài nguyên này.';
             break;
           case 404:
-            errorMessage = 'The requested resource was not found.';
+            errorMessage = 'Không tìm thấy tài nguyên được yêu cầu.';
             break;
           case 500:
             if (errorText) {
-              errorMessage = `Internal Server Error: ${errorText}`;
+              errorMessage = `Lỗi máy chủ nội bộ: ${errorText}`;
             } else {
               errorMessage =
-                'Internal Server Error. Please check the console for details.';
+                'Lỗi máy chủ nội bộ. Vui lòng kiểm tra bảng điều khiển để biết chi tiết.';
             }
             break;
         }
@@ -195,7 +191,7 @@ async function requestWithFormData<T>(
       }
 
       toast({
-        title: 'Error',
+        title: 'Lỗi',
         description: errorMessage,
         variant: 'destructive',
         duration: 3000,
@@ -208,8 +204,8 @@ async function requestWithFormData<T>(
     console.error('Fetch Error:', error);
 
     toast({
-      title: 'Error',
-      description: 'Something went wrong! Please try again later.',
+      title: 'Lỗi',
+      description: 'Có lỗi xảy ra! Vui lòng thử lại sau!',
       variant: 'destructive',
       duration: 3000,
     });

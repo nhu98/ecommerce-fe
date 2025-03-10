@@ -65,7 +65,7 @@ export default function ContentManagement() {
 
       if (result?.result?.intro) {
         toast({
-          title: 'Success',
+          title: 'Thành công',
           description: 'Cập nhật nội dung cửa hàng thành công!',
           variant: 'success',
           duration: 3000,
@@ -79,7 +79,7 @@ export default function ContentManagement() {
   };
 
   return (
-    <div className="w-full min-h-[50vh]">
+    <div className="w-full min-h-[100vh]">
       <div className="wrapper overflow-x-hidden m-4 md:m-8">
         <h2 className="text-2xl font-bold mb-4">Quản lý nội dung</h2>
 

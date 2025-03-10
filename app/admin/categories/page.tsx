@@ -126,7 +126,7 @@ export default function Categories() {
       if (result?.id) {
         setOpenAddModal(false);
         toast({
-          title: 'Success',
+          title: 'Thành công',
           description: 'Thêm danh mục thành công!',
           variant: 'success',
           duration: 3000,
@@ -155,7 +155,7 @@ export default function Categories() {
       if (result?.result?.id) {
         setOpenUpdateModal(false);
         toast({
-          title: 'Success',
+          title: 'Thành công',
           description: 'Cập nhật danh mục thành công!',
           variant: 'success',
           duration: 3000,

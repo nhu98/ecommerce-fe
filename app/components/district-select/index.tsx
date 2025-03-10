@@ -46,18 +46,20 @@ const DistrictSelect = <T extends FieldValues>({
         );
         if (!response.ok) {
           toast({
-            title: 'Error',
-            description: `Error fetching districts ${response.status}`,
+            title: 'Lỗi',
+            description: `Lỗi lấy dữ liệu ${response.status}`,
             variant: 'destructive',
             duration: 3000,
           });
         }
         const data = await response.json();
-        setDistricts(data.data);
+        const districts: District[] = data.data;
+
+        setDistricts(districts);
       } catch (error) {
         toast({
-          title: 'Error',
-          description: `Error fetching districts ${error}`,
+          title: 'Lỗi',
+          description: `Lỗi lấy dữ liệu ${error}`,
           variant: 'destructive',
           duration: 3000,
         });
@@ -67,9 +69,9 @@ const DistrictSelect = <T extends FieldValues>({
     if (cityId) fetchDistricts();
   }, [cityId]);
 
-  const handleDistrictChange = (districtId: string) => {
+  const handleDistrictChange = (districtName: string) => {
     const selectedDistrict = districts.find(
-      (district) => district.id === districtId,
+      (district) => district.name === districtName,
     );
     if (selectedDistrict) {
       onChange({ id: selectedDistrict.id, name: selectedDistrict.name });
@@ -77,16 +79,20 @@ const DistrictSelect = <T extends FieldValues>({
   };
 
   return (
-    <Select disabled={disabled} onValueChange={handleDistrictChange}>
+    <Select
+      defaultValue={defaultValue || ''}
+      disabled={disabled}
+      onValueChange={handleDistrictChange}
+    >
       <SelectTrigger className="" {...register(name as Path<T>)}>
-        <SelectValue placeholder={defaultValue || 'Chọn Quận / Huyện'} />
+        <SelectValue placeholder={'Chọn Quận / Huyện'} />
       </SelectTrigger>
       <SelectContent className="bg-white">
         {districts?.map((district) => (
           <SelectItem
             className="cursor-pointer hover:bg-gray-100"
             key={district.id}
-            value={district.id}
+            value={district.name}
           >
             {district.name}
           </SelectItem>

@@ -44,18 +44,20 @@ const CitySelect = <T extends FieldValues>({
         );
         if (!response.ok) {
           toast({
-            title: 'Error',
-            description: `Error fetching cities ${response.status}`,
+            title: 'Lỗi',
+            description: `Lỗi lấy dữ liệu ${response.status}`,
             variant: 'destructive',
             duration: 3000,
           });
         }
         const data = await response.json();
-        setCities(data.data);
+        const cities: City[] = data.data;
+
+        setCities(cities);
       } catch (error) {
         toast({
-          title: 'Error',
-          description: `Error fetching cities ${error}`,
+          title: 'Lỗi',
+          description: `Lỗi lấy dữ liệu ${error}`,
           variant: 'destructive',
           duration: 3000,
         });
@@ -65,8 +67,8 @@ const CitySelect = <T extends FieldValues>({
     fetchCities();
   }, []);
 
-  const handleCityChange = (cityId: string) => {
-    const selectedCity = cities.find((city) => city.id === cityId);
+  const handleCityChange = (cityName: string) => {
+    const selectedCity = cities.find((city) => city.name === cityName);
     if (selectedCity) {
       onChange({ id: selectedCity.id, name: selectedCity.name });
     }
@@ -74,18 +76,18 @@ const CitySelect = <T extends FieldValues>({
 
   return (
     <Select
-      defaultValue={defaultValue}
+      defaultValue={defaultValue || ''}
       disabled={disabled}
       onValueChange={handleCityChange}
     >
       <SelectTrigger className="" {...register(name as Path<T>)}>
-        <SelectValue placeholder={defaultValue || 'Chọn Thành phố / Tỉnh'} />
+        <SelectValue placeholder={'Chọn Thành phố / Tỉnh'} />
       </SelectTrigger>
       <SelectContent className="bg-white">
         {cities?.map((city) => (
           <SelectItem
             className="cursor-pointer hover:bg-gray-100"
-            key={city.name}
+            key={city.id}
             value={city.name}
           >
             {city.name}

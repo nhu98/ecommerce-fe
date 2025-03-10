@@ -7,6 +7,7 @@ import Footer from '@/app/components/footer';
 import { Toaster } from '@/components/ui/toaster';
 import React from 'react';
 import AppProvider from '@/app/AppProvider';
+import { CallZaloButton } from '@/app/components/call-zalo-button';
 
 // const robotoMono = Roboto_Mono({
 //   variable: '--font-roboto-mono',
@@ -37,6 +38,7 @@ export default function RootLayout({
           <main>{children}</main>
           <TrackingForm />
           <Footer />
+          <CallZaloButton />
         </AppProvider>
         <Toaster />
       </body>

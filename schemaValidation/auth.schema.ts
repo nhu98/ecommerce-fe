@@ -94,6 +94,7 @@ export interface OrderResponse {
   status: string;
   payment_status: number;
   products?: ProductOrderType[];
+  ship_price: number;
 }
 
 export interface OrderApiResponse {
@@ -269,6 +270,13 @@ export const updateOrderStatusSchema = z.object({
   payment_status: z
     .string()
     .min(1, { message: 'Hãy chọn trạng thái thanh toán' }),
+  ship_price: z
+    .string()
+    .transform((val) => Number(val.replace(/\./g, '')))
+    .refine((val) => val >= 0 && val <= 1000000000, {
+      message: 'Giá đến phải lớn hơn hoặc bằng 0 và nhỏ hơn 1 tỉ',
+    })
+    .transform((val) => val.toString()),
 });
 
 export type UpdateOrderStatusFormData = z.infer<typeof updateOrderStatusSchema>;

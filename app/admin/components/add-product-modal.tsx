@@ -129,7 +129,7 @@ const AddProductModal = ({
         reset();
         setOpen(false);
         toast({
-          title: 'Success',
+          title: 'Thành công',
           description: 'Thêm product thành công!',
           variant: 'success',
           duration: 3000,

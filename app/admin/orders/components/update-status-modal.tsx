@@ -21,6 +21,7 @@ import StatusSelect from '@/app/admin/orders/components/statust-select';
 import PaymentStatusSelect from '@/app/admin/orders/components/payment-statust-select';
 import { toast } from '@/components/ui/use-toast';
 import { put } from '@/lib/http-client';
+import { Input } from '@/components/ui/input';
 
 interface UpdateStatusModalProps {
   orderId: string;
@@ -29,6 +30,7 @@ interface UpdateStatusModalProps {
   setOpen: (open: boolean) => void;
   defaultStatus?: string;
   defaultPaymentStatus?: string;
+  defaultShipPrice?: number;
 }
 
 const UpdateStatusModal = ({
@@ -38,6 +40,7 @@ const UpdateStatusModal = ({
   setOpen,
   defaultStatus,
   defaultPaymentStatus,
+  defaultShipPrice,
 }: UpdateStatusModalProps) => {
   // const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -58,6 +61,10 @@ const UpdateStatusModal = ({
     if (defaultPaymentStatus) {
       setValue('payment_status', defaultPaymentStatus);
     }
+    if (defaultShipPrice) {
+      const formattedValue = Number(defaultShipPrice).toLocaleString('vi-VN');
+      setValue('ship_price', formattedValue);
+    }
   }, [defaultStatus, defaultPaymentStatus, setValue]);
 
   const onSubmit = async (data: UpdateOrderStatusFormData) => {
@@ -69,6 +76,7 @@ const UpdateStatusModal = ({
         {
           status: data.status,
           payment_status: data.payment_status,
+          ship_price: data.ship_price,
         },
       );
 
@@ -88,6 +96,12 @@ const UpdateStatusModal = ({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleNumberInput = (field: 'ship_price', value: string) => {
+    const sanitizedValue = value.replace(/\D/g, '');
+    const formattedValue = Number(sanitizedValue).toLocaleString('vi-VN');
+    setValue(field, formattedValue, { shouldValidate: true });
   };
 
   return (
@@ -130,6 +144,21 @@ const UpdateStatusModal = ({
               />
               {errors.payment_status && (
                 <p className="text-red-500">{errors.payment_status.message}</p>
+              )}
+            </div>
+
+            <div className="w-full flex flex-col gap-2">
+              <Label htmlFor="price">{'Chi phí vận chuyển'}</Label>
+              <Input
+                {...register('ship_price')}
+                placeholder="Nhập chi phí vận chuyển"
+                onChange={(e) =>
+                  handleNumberInput('ship_price', e.target.value)
+                }
+                disabled={loading}
+              />
+              {errors.ship_price && (
+                <p className="text-red-500">{errors.ship_price.message}</p>
               )}
             </div>
 

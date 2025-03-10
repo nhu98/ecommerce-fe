@@ -155,7 +155,7 @@ const UpdateProductModal = ({
           handleRefresh();
           setOpen(false);
           toast({
-            title: 'Success',
+            title: 'Thành công',
             description: 'Cập nhật product thành công!',
             variant: 'success',
             duration: 3000,

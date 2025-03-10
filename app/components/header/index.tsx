@@ -32,6 +32,10 @@ import envConfig from '@/config';
 
 const navLinks: NavLink[] = [
   {
+    href: '/',
+    label: 'Trang chủ',
+  },
+  {
     href: '/us-information?tab=intro',
     label: 'Giới thiệu',
   },
@@ -39,6 +43,13 @@ const navLinks: NavLink[] = [
   {
     href: '/us-information?tab=contact',
     label: 'Liên hệ',
+  },
+];
+
+const adminNavLinks: NavLink[] = [
+  {
+    href: '/',
+    label: 'Trang chủ',
   },
 ];
 
@@ -230,11 +241,14 @@ function Header() {
     <header className="relative">
       <div>
         <div className="flex px-5">
-          <div className="flex w-full bg-[#f5f6f2] justify-between rounded-b-3xl px-2">
+          <div className="flex justify-center md:justify-normal w-full bg-[#f5f6f2] rounded-b-3xl px-2">
             <div className="p-2">
-              {pathname.startsWith('/admin') ? null : (
-                <NavLinks links={navLinks} />
-              )}
+              {/*{pathname.startsWith('/admin') ? null : (*/}
+              {/*  <NavLinks links={navLinks} />*/}
+              {/*)}*/}
+              <NavLinks
+                links={pathname.startsWith('/admin') ? adminNavLinks : navLinks}
+              />
             </div>
           </div>
         </div>

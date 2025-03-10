@@ -61,6 +61,9 @@ const OrderCard = ({ item, handleRemove }: OrderCardProps) => {
           </p>
           <p className="text-gray-500">Tổng cộng: {formatPrice(item.price)}</p>
           <p className="text-gray-500">
+            Phí vận chuyển: {formatPrice(item.ship_price)}
+          </p>
+          <p className="text-gray-500">
             Giảm giá: {formatPrice(item.discount)}
           </p>
 
@@ -93,6 +96,7 @@ const OrderCard = ({ item, handleRemove }: OrderCardProps) => {
         orderId={item.id}
         defaultStatus={item.status}
         defaultPaymentStatus={item.payment_status.toString()}
+        defaultShipPrice={item.ship_price}
       />
     </>
   );

@@ -25,10 +25,9 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { putWithFormData } from '@/lib/http-client';
 import { toast } from '@/components/ui/use-toast';
-import envConfig from '@/config';
 import { Description } from '@radix-ui/react-dialog';
 
-const baseUrl = envConfig.NEXT_PUBLIC_URL;
+const baseUrl = 'https://qlbh-be.onrender.com';
 
 interface UpdateModalProps {
   item: ProductResponse;

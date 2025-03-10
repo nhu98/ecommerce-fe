@@ -17,12 +17,15 @@ import { useRouter } from 'next/navigation';
 import { decodeToken } from '@/lib/utils';
 import { getUerInfo, sendTokenToNextServer } from '@/lib/auth-services';
 import { Eye, EyeOff } from 'lucide-react';
+import { useAppContext } from '@/app/AppProvider';
 
 interface SignInCardProps {
   onClose: () => void;
 }
 
 const SignInCard = ({ onClose }: SignInCardProps) => {
+  const { login } = useAppContext();
+
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -46,8 +49,6 @@ const SignInCard = ({ onClose }: SignInCardProps) => {
       });
 
       if (result?.token) {
-        localStorage.setItem('sessionToken', result.token);
-
         await sendTokenToNextServer(result.token);
 
         const decoded = decodeToken(result.token);
@@ -55,7 +56,7 @@ const SignInCard = ({ onClose }: SignInCardProps) => {
         if (!decoded?.phone) {
           toast({
             title: 'Lỗi',
-            description: 'Không có thông tin người dùng!',
+            description: 'Không có sdt người dùng!',
             variant: 'destructive',
             duration: 3000,
           });
@@ -64,6 +65,7 @@ const SignInCard = ({ onClose }: SignInCardProps) => {
         }
 
         await getUerInfo(decoded.phone);
+        login(result.token);
 
         toast({
           title: 'Thành công',
@@ -79,9 +81,6 @@ const SignInCard = ({ onClose }: SignInCardProps) => {
         }
 
         onClose();
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
       }
     } catch (error) {
       console.error('Error during signIn:', error);

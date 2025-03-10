@@ -4,12 +4,11 @@ import Image from 'next/image';
 import { Minus, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CartItem, formatPrice, updateLocalStorage } from '@/lib/utils';
-import envConfig from '@/config';
 import { toast } from '@/components/ui/use-toast';
 import { useAppContext } from '@/app/AppProvider';
 import { useRouter } from 'next/navigation';
 
-const baseUrl = envConfig.NEXT_PUBLIC_URL;
+const baseUrl = 'https://qlbh-be.onrender.com';
 
 const Cart: React.FC = () => {
   const router = useRouter();

@@ -19,7 +19,7 @@ export const getUerInfo = async (phoneNumber: string) => {
       return;
     } else {
       writeLocalUser(getMeRes);
-      return;
+      return getMeRes;
     }
   } catch (error) {
     console.log('error', error);

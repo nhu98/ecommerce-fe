@@ -5,7 +5,6 @@ import { formatPrice } from '@/lib/utils';
 import ConfirmModal from '@/app/components/confirm-modal';
 import Image from 'next/image';
 import { Label } from '@/components/ui/label';
-import envConfig from '@/config';
 import UpdateProductModal from '@/app/admin/components/update-product-modal';
 
 interface ProductCardProps {
@@ -14,7 +13,7 @@ interface ProductCardProps {
   handleRefresh: () => void;
 }
 
-const baseUrl = envConfig.NEXT_PUBLIC_URL;
+const baseUrl = 'https://qlbh-be.onrender.com';
 
 const ProductCard = ({
   item,

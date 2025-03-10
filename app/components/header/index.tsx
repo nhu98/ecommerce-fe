@@ -28,7 +28,6 @@ import { useAppContext } from '@/app/AppProvider';
 import { NoAvatar } from '@/app/components/user-avatar/no-image-avt';
 import ChangePasswordModal from '@/app/components/change-password-modal';
 import { get } from '@/lib/http-client';
-import envConfig from '@/config';
 
 const navLinks: NavLink[] = [
   {
@@ -53,13 +52,13 @@ const adminNavLinks: NavLink[] = [
   },
 ];
 
-const baseUrl = envConfig.NEXT_PUBLIC_URL;
+const baseUrl = 'https://qlbh-be.onrender.com';
 
 function Header() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { isActioned } = useAppContext();
+  const { isActioned, token, login } = useAppContext();
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
@@ -124,9 +123,13 @@ function Header() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setLocalUser(getLocalUser());
+      if (token) {
+        setLocalUser(getLocalUser());
+      } else if (!token) {
+        setLocalUser(undefined);
+      }
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -339,7 +342,8 @@ function Header() {
                       await logout();
 
                       setOpenSheet(false);
-                      window.location.reload();
+                      login('');
+                      router.push('/');
                     }}
                     className="bg-red-500 hover:bg-red-600 text-white"
                   >

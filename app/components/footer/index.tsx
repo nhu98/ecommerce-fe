@@ -6,9 +6,8 @@ import Link from 'next/link';
 import { ShopDataApiResponse } from '@/schemaValidation/auth.schema';
 import { get } from '@/lib/http-client';
 import { isValue } from '@/lib/utils';
-import envConfig from '@/config';
 
-const baseUrl = envConfig.NEXT_PUBLIC_URL;
+const baseUrl = 'https://qlbh-be.onrender.com';
 
 const Footer = () => {
   const [shopData, setShopData] = useState<ShopDataApiResponse>();

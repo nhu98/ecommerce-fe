@@ -9,12 +9,11 @@ import { get } from '@/lib/http-client';
 import { ProductResponse } from '@/schemaValidation/auth.schema';
 import LoaderComponent from '@/app/components/loader';
 import { addToCart, formatPrice } from '@/lib/utils';
-import envConfig from '@/config';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { useAppContext } from '@/app/AppProvider';
 
-const baseUrl = envConfig.NEXT_PUBLIC_URL;
+const baseUrl = 'https://qlbh-be.onrender.com';
 
 export default function ProductDetail() {
   const router = useRouter();

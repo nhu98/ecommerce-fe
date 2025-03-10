@@ -4,7 +4,6 @@ import { Product } from '@/app/components/productCategory';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import envConfig from '@/config';
 import { addToCart, formatPrice } from '@/lib/utils';
 import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
@@ -14,7 +13,7 @@ interface ProductCardProps {
   product: Product;
 }
 
-const baseUrl = envConfig.NEXT_PUBLIC_URL;
+const baseUrl = 'https://qlbh-be.onrender.com';
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const router = useRouter();

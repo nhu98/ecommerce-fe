@@ -15,9 +15,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import LoaderComponent from '@/app/components/loader';
 import Image from 'next/image';
-import envConfig from '@/config';
 
-const baseUrl = envConfig.NEXT_PUBLIC_URL;
+const baseUrl = 'https://qlbh-be.onrender.com';
 
 export default function LayoutManagement() {
   const [loading, setLoading] = useState(false);

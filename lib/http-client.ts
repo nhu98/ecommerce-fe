@@ -1,8 +1,7 @@
-import envConfig from '@/config';
 import { toast } from '@/components/ui/use-toast';
 import { logout } from '@/lib/utils';
 
-const baseUrl = envConfig.NEXT_PUBLIC_URL;
+const baseUrl = 'https://qlbh-be.onrender.com';
 
 export const isClient = () => typeof window !== 'undefined';
 

@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { UserDataType } from '@/schemaValidation/auth.schema';
 
 export interface IAppContext {
@@ -7,6 +7,8 @@ export interface IAppContext {
   setUser: (user: UserDataType) => void;
   isActioned: boolean;
   setIsActioned: (isActioned: boolean) => void;
+  token: string | null;
+  login: (newToken: string) => void;
 }
 
 const DEFAULT_CONTEXT: IAppContext = {
@@ -14,6 +16,8 @@ const DEFAULT_CONTEXT: IAppContext = {
   setUser: () => {},
   isActioned: false,
   setIsActioned: () => {},
+  token: null,
+  login: () => {},
 };
 
 const AppContext = createContext<IAppContext>(DEFAULT_CONTEXT);
@@ -34,8 +38,22 @@ export default function AppProvider({
   const [user, setUser] = useState<UserDataType>({} as UserDataType);
   const [isActioned, setIsActioned] = useState<boolean>(false);
 
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('sessionToken');
+    if (storedToken) setToken(storedToken);
+  }, []);
+
+  const login = (newToken: string) => {
+    localStorage.setItem('sessionToken', newToken);
+    setToken(newToken);
+  };
+
   return (
-    <AppContext.Provider value={{ user, setUser, isActioned, setIsActioned }}>
+    <AppContext.Provider
+      value={{ user, setUser, isActioned, setIsActioned, token, login }}
+    >
       {children}
     </AppContext.Provider>
   );

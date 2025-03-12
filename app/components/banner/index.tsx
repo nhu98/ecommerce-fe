@@ -33,8 +33,8 @@ const Banner = () => {
         <Image
           priority
           src={
-            shopData?.banner
-              ? `${baseUrl}/imgs/products/${shopData?.banner}`
+            shopData?.banner1
+              ? `${baseUrl}/imgs/products/${shopData?.banner1}`
               : '/images/no-image.webp'
           }
           fill

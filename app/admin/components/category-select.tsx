@@ -57,7 +57,14 @@ const CategorySelect = <T extends FieldValues>({
         if (result?.categories.length === 0) {
           setCategories([]);
         } else if (result?.categories && result?.totalPages) {
-          setCategories(result?.categories);
+          if (currentPage === 1) {
+            setCategories(result?.categories);
+          } else {
+            setCategories((prevCategories) => [
+              ...prevCategories,
+              ...result.categories,
+            ]);
+          }
           setTotalPages(result?.totalPages);
         }
       } catch (error) {

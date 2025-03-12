@@ -1,8 +1,8 @@
 'use client';
 import React, { useCallback, useEffect, useState } from 'react';
-import Banner from '@/app/components/banner';
 import { ArrowUpToLine } from 'lucide-react';
 import MainContent from '@/app/components/main-contain';
+import Slider from '@/app/components/slider';
 
 export default function Home() {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
@@ -23,7 +23,8 @@ export default function Home() {
   return (
     <div className="w-full">
       <div className="mx-4 my-2 md:my-8 overflow-x-hidden md:mx-8">
-        <Banner />
+        {/*<Banner />*/}
+        <Slider />
         <MainContent />
       </div>
       {showScrollToTop && (

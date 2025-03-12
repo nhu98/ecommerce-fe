@@ -208,7 +208,7 @@ export default function Product() {
   };
 
   return (
-    <div className="w-full min-h-[50vh]">
+    <div className="w-full min-h-[80vh]">
       <div className="wrapper overflow-x-hidden m-4 md:m-8">
         <h2 className="text-2xl font-bold mb-4">Quản lý sản phẩm</h2>
 

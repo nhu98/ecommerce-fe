@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
+import { Input } from '@/components/ui/input';
 
 const TrackingForm: React.FC = () => {
   const router = useRouter();
@@ -31,11 +32,11 @@ const TrackingForm: React.FC = () => {
     <>
       {pathname.startsWith('/admin') ? null : (
         <div className="bg-gray-100 p-8 rounded-lg">
-          <h2 className="flex justify-center items-center text-2xl font-bold mb-4">
+          <h2 className="flex justify-center items-center text-xl mb-4">
             TRA CỨU MÃ VẬN ĐƠN VÀ HÀNH TRÌNH VẬN CHUYỂN
           </h2>
           <form onSubmit={handleSubmit} className="flex items-center">
-            <input
+            <Input
               type="text"
               className="border border-gray-300 px-4 py-2 rounded-l w-full focus:outline-none focus:ring-2 focus:ring-blue-500 mr-2"
               placeholder="Nhập số điện thoại vào đây"
@@ -44,7 +45,7 @@ const TrackingForm: React.FC = () => {
             />
             <button
               type="submit"
-              className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg w-48 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-red-500 hover:bg-red-600 text-xs text-white py-2 px-1 rounded-lg w-28 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               TÌM KIẾM
             </button>

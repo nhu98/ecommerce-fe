@@ -322,7 +322,11 @@ export interface ShopDataApiResponse {
   question: string;
   contact: string;
   logo: string;
-  banner: string;
+  banner1: string;
+  banner2: string;
+  banner3: string;
+  banner4: string;
+  banner5: string;
 }
 
 export const updateShopSchema = z.object({

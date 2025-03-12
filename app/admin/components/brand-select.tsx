@@ -55,7 +55,11 @@ const BrandSelect = <T extends FieldValues>({
         if (result?.brands.length === 0) {
           setBrands([]);
         } else if (result?.brands && result?.totalPages) {
-          setBrands(result?.brands);
+          if (currentPage === 1) {
+            setBrands(result?.brands);
+          } else {
+            setBrands((prevBrands) => [...prevBrands, ...result.brands]);
+          }
           setTotalPages(result?.totalPages);
         }
       } catch (error) {

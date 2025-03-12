@@ -17,6 +17,7 @@ export interface Product {
 export default function Product() {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get('categoryId');
+  const categoryQueryName = searchParams.get('category');
   const [categoryName, setCategoryName] = useState('');
 
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ export default function Product() {
 
   useEffect(() => {
     window.scrollTo(0, 0); // Cuộn lên đầu trang
-  }, []);
+  }, [categoryId]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -46,6 +47,7 @@ export default function Product() {
 
         if (result?.products.length === 0) {
           setProducts([]);
+          setCategoryName(categoryQueryName || 'Danh mục rỗng');
         } else if (result?.products && result?.totalPages) {
           setCategoryName(result?.products[0]?.category_name);
 
@@ -76,7 +78,7 @@ export default function Product() {
     }
 
     return (
-      <div className="w-full min-h-[50vh]">
+      <div className="w-full min-h-[80vh]">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
@@ -96,7 +98,7 @@ export default function Product() {
 
   return (
     <div>
-      <div className="wrapper overflow-x-hidden mx-4">
+      <div className="wrapper overflow-x-hidden mx-4 min-h-[80vh]">
         <div className="flex flex-col">
           <div className="bg-gray-100 py-1 px-2 flex flex-col justify-center mb-4">
             <h2 className="text-xl font-semibold">{categoryName}</h2>

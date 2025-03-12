@@ -51,9 +51,14 @@ const OrderCard = ({ item }: OrderCardProps) => {
           <p className="text-gray-500">
             Phí vận chuyển: {formatPrice(item.ship_price)}
           </p>
-          <p className="text-gray-500">
-            Giảm giá: {formatPrice(item.discount)}
-          </p>
+          {item.ship_price > 0 && (
+            <p className="text-gray-500">
+              Tổng cộng: {formatPrice(item.price + item.ship_price)}
+            </p>
+          )}
+          {/*<p className="text-gray-500">*/}
+          {/*  Giảm giá: {formatPrice(item.discount)}*/}
+          {/*</p>*/}
 
           {item.products
             ? item.products.map((product) => {

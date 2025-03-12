@@ -4,13 +4,14 @@ import Image from 'next/image';
 import {
   Inbox,
   KeyRound,
+  Menu,
   Search,
   ShoppingCart,
   User,
   UserRoundCog,
   X,
 } from 'lucide-react';
-import NavLinks, { NavLink } from '../nav-link';
+import { NavLink } from '../nav-link';
 import Link from 'next/link';
 import FiltersModel from '@/app/components/filters-modal';
 import AuthModal from '@/app/components/auth-modal';
@@ -28,6 +29,7 @@ import { useAppContext } from '@/app/AppProvider';
 import { NoAvatar } from '@/app/components/user-avatar/no-image-avt';
 import ChangePasswordModal from '@/app/components/change-password-modal';
 import { get } from '@/lib/http-client';
+import { useCategoryData } from '@/lib/categoryData';
 
 const navLinks: NavLink[] = [
   {
@@ -45,12 +47,12 @@ const navLinks: NavLink[] = [
   },
 ];
 
-const adminNavLinks: NavLink[] = [
-  {
-    href: '/',
-    label: 'Trang chủ',
-  },
-];
+// const adminNavLinks: NavLink[] = [
+//   {
+//     href: '/',
+//     label: 'Trang chủ',
+//   },
+// ];
 
 const baseUrl = 'https://qlbh-be.onrender.com';
 
@@ -65,6 +67,7 @@ function Header() {
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [openSheet, setOpenSheet] = useState(false);
+  const [openMenuSheet, setOpenMenuSheet] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
 
   const [localUser, setLocalUser] = useState<UserDataType | undefined>(
@@ -188,6 +191,9 @@ function Header() {
     );
   };
 
+  const { categories, totalPages, handleLoadMoreCategories } =
+    useCategoryData();
+
   const renderSheetContent = () => {
     if (localUser?.role_id === 1) {
       return (
@@ -240,22 +246,57 @@ function Header() {
     }
   };
 
+  const renderMenuSheetContent = () => {
+    return (
+      <div className="flex flex-col gap-2">
+        {navLinks.map((link) => (
+          <Link
+            key={link.label}
+            href={link.href}
+            onClick={() => setOpenMenuSheet(false)}
+          >
+            <div className="flex flex-row  items-center gap-4 hover:text-red-500 hover:opacity-50 pb-1">
+              <p className="font-semibold">{link.label}</p>
+            </div>
+          </Link>
+        ))}
+        {categories?.map((category) => (
+          <Link
+            key={category.id}
+            href={`/products?categoryId=${category.id}&category=${category.name}`}
+            onClick={() => setOpenMenuSheet(false)}
+          >
+            <div className="flex flex-row  items-center gap-4 hover:text-red-500 hover:opacity-50 pb-1">
+              <p className="">{category.name}</p>
+            </div>
+          </Link>
+        ))}
+
+        {totalPages > 1 && (
+          <Button
+            onClick={handleLoadMoreCategories}
+            className="w-full mt-2 hover:bg-gray-100"
+          >
+            Xem thêm
+          </Button>
+        )}
+      </div>
+    );
+  };
+
   return (
     <header className="relative">
-      <div>
-        <div className="flex px-5">
-          <div className="flex justify-center md:justify-normal w-full bg-[#f5f6f2] rounded-b-3xl px-2">
-            <div className="p-2">
-              {/*{pathname.startsWith('/admin') ? null : (*/}
-              {/*  <NavLinks links={navLinks} />*/}
-              {/*)}*/}
-              <NavLinks
-                links={pathname.startsWith('/admin') ? adminNavLinks : navLinks}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      {/*<div>*/}
+      {/*  <div className="flex px-5">*/}
+      {/*    <div className="flex justify-center md:justify-normal w-full bg-[#f5f6f2] rounded-b-3xl px-2">*/}
+      {/*      <div className="p-2">*/}
+      {/*        <NavLinks*/}
+      {/*          links={pathname.startsWith('/admin') ? adminNavLinks : navLinks}*/}
+      {/*        />*/}
+      {/*      </div>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
 
       <div
         className={`mx-auto flex px-4 md:px-8 justify-between items-center font-inter top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -264,8 +305,31 @@ function Header() {
             : 'py-2 md:py-4 bg-white' // Normal styles
         }`}
       >
+        {pathname.startsWith('/admin') ? null : (
+          <div>
+            <SheetComponent
+              open={openMenuSheet}
+              onOpenChange={setOpenMenuSheet}
+              childTrigger={
+                <div
+                  className={
+                    'w-11 h-11 rounded bg-gray-100 flex items-center justify-center hover:bg-red-500 cursor-pointer transition-all duration-500'
+                  }
+                >
+                  <Menu />
+                </div>
+              }
+              side={'left'}
+            >
+              <div className="flex flex-col justify-center gap-4">
+                {renderMenuSheetContent()}
+              </div>
+            </SheetComponent>
+          </div>
+        )}
+
         {/* Logo Section */}
-        <div className="flex items-center gap-[10px]">
+        <div className="flex items-center">
           <Link href={'/'}>
             <Image
               priority
@@ -356,7 +420,6 @@ function Header() {
             <AuthModal />
           )}
 
-          {/*<div className={`${localUser?.role_id === 1 ? 'hidden' : ''}`}>*/}
           {pathname.startsWith('/admin') ? null : (
             <Link href={'/cart'}>
               <div className="relative w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center mr-2">
@@ -369,8 +432,6 @@ function Header() {
               </div>
             </Link>
           )}
-
-          {/*</div>*/}
         </div>
       </div>
 

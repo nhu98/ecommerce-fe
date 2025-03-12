@@ -16,6 +16,7 @@ interface SheetComponentProps {
   children?: React.ReactNode;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  side?: 'left' | 'right';
 }
 
 export function SheetComponent({
@@ -26,11 +27,12 @@ export function SheetComponent({
   footer,
   open,
   onOpenChange,
+  side,
 }: SheetComponentProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetTrigger>{childTrigger}</SheetTrigger>
-      <SheetContent>
+      <SheetContent className="overflow-auto" side={side ? side : 'right'}>
         <SheetHeader>
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>{description}</SheetDescription>

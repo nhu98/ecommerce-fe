@@ -86,9 +86,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
             <Button
               onClick={handleAddToCart}
-              className="flex text-sm items-center justify-center font-semibold w-full bg-gray-100 border rounded-lg hover:bg-gray-300"
+              className="flex text-sm items-center justify-center font-semibold w-full bg-orange-500 border rounded-lg hover:bg-orange-600"
             >
-              <p className="text-sm text-black">Thêm vào giỏ</p>
+              <p className="text-sm text-white">Thêm vào giỏ</p>
             </Button>
           </div>
         </div>

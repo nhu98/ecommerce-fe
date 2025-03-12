@@ -105,7 +105,7 @@ export default function SearchProduct() {
   };
 
   return (
-    <div className="w-full min-h-[50vh]">
+    <div className="w-full min-h-[80vh]">
       <div className="wrapper overflow-x-hidden m-8">
         <div className="flex flex-col mt-8 gap-4">
           <div className="flex flex-col justify-center items-center">

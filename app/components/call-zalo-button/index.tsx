@@ -35,14 +35,14 @@ export const CallZaloButton = () => {
           >
             <a
               href="tel:+84962486085"
-              className="rounded-full bg-black opacity-50 text-white p-2 hover:bg-gray-500  transition"
+              className="rounded-full bg-orange-400 text-white p-2 hover:bg-orange-500 transition font-semibold"
             >
               <span>096.2486.085(Huy)</span>
             </a>
 
             <a
               href="tel:+84974550638"
-              className="rounded-full bg-black opacity-50 text-white p-2 hover:bg-gray-500  transition"
+              className="rounded-full bg-orange-400 text-white p-2 hover:bg-orange-500 transition font-semibold"
             >
               <span>0974.550.638(Giang)</span>
             </a>

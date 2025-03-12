@@ -69,7 +69,7 @@ const Cart: React.FC = () => {
   };
 
   return (
-    <div className="p-4 w-full min-h-[50vh]">
+    <div className="p-4 w-full min-h-[80vh]">
       <div className="bg-gray-100 py-1 px-2 flex flex-col justify-center mb-4">
         <h2 className="text-xl font-semibold">Giỏ hàng</h2>
       </div>

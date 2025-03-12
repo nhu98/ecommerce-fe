@@ -145,7 +145,7 @@ const Checkout: React.FC = () => {
   };
 
   return (
-    <div className="p-4 w-full min-h-[50vh]">
+    <div className="p-4 w-full min-h-[80vh]">
       {cartItems.length === 0 ? (
         <div className="flex justify-center items-center">
           <h2 className="text-xl font-semibold mb-4">Giỏ hàng trống</h2>

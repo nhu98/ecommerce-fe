@@ -15,6 +15,13 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import LoaderComponent from '@/app/components/loader';
 import Image from 'next/image';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Description } from '@radix-ui/react-dialog';
 
 const baseUrl = 'https://qlbh-be.onrender.com';
 
@@ -22,10 +29,19 @@ export default function LayoutManagement() {
   const [loading, setLoading] = useState(false);
 
   const [logo, setLogo] = useState<string | null>();
-  const [banner, setBanner] = useState<string | null>();
+  // const [banner, setBanner] = useState<string | null>();
 
   const logoInputRefs = useRef<HTMLInputElement | null>(null);
   const bannerInputRefs = useRef<HTMLInputElement | null>(null);
+
+  const sliderInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const [previewSliders, setPreviewSliders] = useState<(string | null)[]>(
+    Array(5).fill(null),
+  );
+
+  const [openImgDialog, setOpenImgDialog] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const {
     register,
@@ -39,6 +55,10 @@ export default function LayoutManagement() {
   useEffect(() => {
     logoInputRefs.current = React.createRef<HTMLInputElement>().current;
     bannerInputRefs.current = React.createRef<HTMLInputElement>().current;
+
+    sliderInputRefs.current = Array(5)
+      .fill(null)
+      .map(() => React.createRef<HTMLInputElement>().current);
   }, []);
 
   useEffect(() => {
@@ -55,9 +75,19 @@ export default function LayoutManagement() {
           if (result.logo) {
             setLogo(`${baseUrl}/imgs/products/${result.logo}`);
           }
-          if (result.banner) {
-            setBanner(`${baseUrl}/imgs/products/${result.banner}`);
+          // if (result.banner1) {
+          //   setBanner(`${baseUrl}/imgs/products/${result.banner1}`);
+          // }
+
+          const newPreviewSliders = Array(5).fill(null);
+          for (let i = 1; i <= 5; i++) {
+            const imgField = `banner${i}` as keyof ShopDataApiResponse;
+            if (result[imgField]) {
+              newPreviewSliders[i - 1] =
+                `${baseUrl}/imgs/products/${result[imgField]}`;
+            }
           }
+          setPreviewSliders(newPreviewSliders);
         }
       } catch (error) {
         console.log(error);
@@ -77,9 +107,15 @@ export default function LayoutManagement() {
     if (logo) {
       formData.append('logo', logoInputRefs.current?.files?.[0] || '');
     }
-    if (banner) {
-      formData.append('banner', bannerInputRefs.current?.files?.[0] || '');
-    }
+    // if (banner) {
+    //   formData.append('banner', bannerInputRefs.current?.files?.[0] || '');
+    // }
+
+    sliderInputRefs.current.forEach((ref, index) => {
+      if (ref && ref.files && ref.files[0]) {
+        formData.append(`banner${index + 1}`, ref.files[0]);
+      }
+    });
 
     if (loading) return;
     setLoading(true);
@@ -115,9 +151,10 @@ export default function LayoutManagement() {
         const imageUrl = reader.result as string;
         if (type === 'logo') {
           setLogo(imageUrl);
-        } else if (type === 'banner') {
-          setBanner(imageUrl);
         }
+        // else if (type === 'banner') {
+        //   setBanner(imageUrl);
+        // }
       };
       reader.readAsDataURL(file);
     }
@@ -130,12 +167,43 @@ export default function LayoutManagement() {
       if (logoInputRefs.current) {
         logoInputRefs.current.value = '';
       }
-    } else if (type === 'banner') {
-      setBanner(null);
+    }
+    // else if (type === 'banner') {
+    //   setBanner(null);
+    //
+    //   if (bannerInputRefs.current) {
+    //     bannerInputRefs.current.value = '';
+    //   }
+    // }
+  };
 
-      if (bannerInputRefs.current) {
-        bannerInputRefs.current.value = '';
-      }
+  const handleSliderChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageUrl = reader.result as string;
+        setPreviewSliders((prev) => {
+          const newPreviewImages = [...prev];
+          newPreviewImages[index] = imageUrl;
+          return newPreviewImages;
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleClearSlider = (index: number) => {
+    setPreviewSliders((prev) => {
+      const newPreviewImages = [...prev];
+      newPreviewImages[index] = null;
+      return newPreviewImages;
+    });
+    if (sliderInputRefs.current[index]) {
+      sliderInputRefs.current[index].value = '';
     }
   };
 
@@ -176,7 +244,7 @@ export default function LayoutManagement() {
             </div>
 
             <div className="w-full flex flex-row justify-between gap-8">
-              <div className="w-full flex flex-col gap-2">
+              <div className="w-1/3 flex flex-col gap-2">
                 <Label htmlFor="img">Logo</Label>
                 <div className="grid grid-cols-1">
                   <Image
@@ -184,8 +252,11 @@ export default function LayoutManagement() {
                     alt={'img-logo'}
                     width={160}
                     height={160}
-                    onClick={() => {}}
-                    className={`w-full rounded-lg object-cover cursor-pointer${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    onClick={() => {
+                      setSelectedImage(logo || '/images/no-image.webp');
+                      setOpenImgDialog(true);
+                    }}
+                    className={`rounded-lg object-cover cursor-pointer${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   />
                 </div>
 
@@ -230,58 +301,123 @@ export default function LayoutManagement() {
                 </div>
               </div>
 
-              <div className="w-full flex flex-col gap-2">
-                <Label htmlFor="img">banner</Label>
-                <div className="grid grid-cols-1">
-                  <Image
-                    src={banner || '/images/no-image.webp'}
-                    alt={'img-banner'}
-                    width={160}
-                    height={160}
-                    onClick={() => {}}
-                    className={`w-full rounded-lg object-cover cursor-pointer${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  />
-                </div>
+              {/*<div className="w-full flex flex-col gap-2">*/}
+              {/*  <Label htmlFor="img">banner</Label>*/}
+              {/*  <div className="grid grid-cols-1">*/}
+              {/*    <Image*/}
+              {/*      src={banner || '/images/no-image.webp'}*/}
+              {/*      alt={'img-banner'}*/}
+              {/*      width={160}*/}
+              {/*      height={160}*/}
+              {/*      onClick={() => {}}*/}
+              {/*      className={`w-full rounded-lg object-cover cursor-pointer${loading ? 'opacity-50 cursor-not-allowed' : ''}`}*/}
+              {/*    />*/}
+              {/*  </div>*/}
 
-                <div className="flex flex-col gap-2 mt-2">
-                  <Input
-                    ref={(el) => {
-                      if (el) {
-                        bannerInputRefs.current = el;
-                      }
-                    }}
-                    id="banner"
-                    type="file"
-                    accept="image/*"
-                    disabled={loading}
-                    onChange={(event) => handleFileChange(event, 'banner')}
-                    className="hidden"
-                  />
+              {/*  <div className="flex flex-col gap-2 mt-2">*/}
+              {/*    <Input*/}
+              {/*      ref={(el) => {*/}
+              {/*        if (el) {*/}
+              {/*          bannerInputRefs.current = el;*/}
+              {/*        }*/}
+              {/*      }}*/}
+              {/*      id="banner"*/}
+              {/*      type="file"*/}
+              {/*      accept="image/*"*/}
+              {/*      disabled={loading}*/}
+              {/*      onChange={(event) => handleFileChange(event, 'banner')}*/}
+              {/*      className="hidden"*/}
+              {/*    />*/}
 
-                  {logo && (
-                    <span className="text-sm text-gray-600 truncate">
-                      {bannerInputRefs.current?.files?.[0]?.name || ''}
-                    </span>
-                  )}
+              {/*    {banner && (*/}
+              {/*      <span className="text-sm text-gray-600 truncate">*/}
+              {/*        {bannerInputRefs.current?.files?.[0]?.name || ''}*/}
+              {/*      </span>*/}
+              {/*    )}*/}
 
-                  <div className="flex flex-row gap-2">
-                    <label
-                      htmlFor={'banner'}
-                      className={`w-full bg-blue-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''} `}
-                    >
-                      Chọn Banner
-                    </label>
+              {/*    <div className="flex flex-row gap-2">*/}
+              {/*      <label*/}
+              {/*        htmlFor={'banner'}*/}
+              {/*        className={`w-full bg-blue-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''} `}*/}
+              {/*      >*/}
+              {/*        Chọn Banner*/}
+              {/*      </label>*/}
 
-                    {banner && (
-                      <label
-                        onClick={() => handleClearImage('banner')}
-                        className={`w-full bg-red-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      >
-                        Bỏ chọn
-                      </label>
-                    )}
+              {/*      {banner && (*/}
+              {/*        <label*/}
+              {/*          onClick={() => handleClearImage('banner')}*/}
+              {/*          className={`w-full bg-red-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}*/}
+              {/*        >*/}
+              {/*          Bỏ chọn*/}
+              {/*        </label>*/}
+              {/*      )}*/}
+              {/*    </div>*/}
+              {/*  </div>*/}
+              {/*</div>*/}
+            </div>
+
+            <div className="w-full flex flex-col gap-2">
+              <Label>{'Sliders'}</Label>
+
+              <div className="grid grid-cols-2 gap-4">
+                {previewSliders.map((image, index) => (
+                  <div key={index} className={'w-full h-fit flex flex-col'}>
+                    <Image
+                      src={image || '/images/no-image.webp'}
+                      alt={`img${index + 1}`}
+                      width={160}
+                      height={160}
+                      onClick={() => {
+                        setSelectedImage(image);
+                        setOpenImgDialog(true);
+                      }}
+                      className={`w-full h-[200px] object-cover rounded-lg cursor-pointer${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    />
+
+                    <div className="flex items-center gap-2 mt-2">
+                      <Input
+                        ref={(el) => {
+                          if (el) {
+                            sliderInputRefs.current[index] = el;
+                          }
+                        }}
+                        id={`img${index + 1}`}
+                        type="file"
+                        accept="image/*"
+                        disabled={loading}
+                        onChange={(event) => handleSliderChange(event, index)}
+                        className="hidden"
+                      />
+
+                      <div className={`flex flex-col md:flex-row gap-2`}>
+                        <div className="flex flex-row items-center">
+                          <label
+                            htmlFor={`img${index + 1}`}
+                            className={`bg-blue-500 text-white px-2 py-1 rounded cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''} `}
+                          >
+                            Chọn hình {index + 1}
+                          </label>
+                        </div>
+
+                        <label
+                          onClick={() => handleClearSlider(index)}
+                          className={`bg-red-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          Bỏ chọn
+                        </label>
+                        <div className="flex flex-row items-center">
+                          {image && (
+                            <span className="text-sm text-gray-600 truncate max-w-[100px]">
+                              {sliderInputRefs.current[index]?.files?.[0]
+                                ?.name || ''}
+                              ád,al;msdl;ámldma;lsmd;ámd;má;ldmal;mdl;ámdl;mal;sdml;ámdl;
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -320,6 +456,23 @@ export default function LayoutManagement() {
         </div>
       </div>
       {loading && <LoaderComponent />}
+
+      <Dialog open={openImgDialog} onOpenChange={setOpenImgDialog}>
+        <DialogTrigger asChild></DialogTrigger>
+        {/* Modal */}
+        <DialogContent className="!max-w-3xl !justify-start flex flex-col items-center bg-transparent border-0 shadow-none p-0">
+          <DialogTitle className="m-4 hidden"></DialogTitle>
+          <Description className=" hidden"></Description>
+          {/* Ảnh lớn */}
+          <Image
+            src={selectedImage || '/images/no-image.webp'}
+            width={300}
+            height={300}
+            alt="Full Image"
+            className="w-full h-full object-contain rounded-lg"
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

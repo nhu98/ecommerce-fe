@@ -34,7 +34,7 @@ const Banner = () => {
           priority
           src={
             shopData?.banner1
-              ? `${baseUrl}/imgs/products/${shopData?.banner1}`
+              ? `${baseUrl}/imgs/shop/${shopData?.banner1}`
               : '/images/no-image.webp'
           }
           fill

@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'qlbh-be.onrender.com',
       },
+      {
+        protocol: 'http',
+        hostname: '14.225.206.204',
+        port: '3001', // Thêm port nếu cần thiết
+        pathname: '/imgs/products/**', // Thêm pathname nếu cần thiết
+      },
     ],
   },
 };

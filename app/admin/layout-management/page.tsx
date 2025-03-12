@@ -73,7 +73,7 @@ export default function LayoutManagement() {
           setValue('sologan', result.sologan);
 
           if (result.logo) {
-            setLogo(`${baseUrl}/imgs/products/${result.logo}`);
+            setLogo(`${baseUrl}/imgs/shop/${result.logo}`);
           }
           // if (result.banner1) {
           //   setBanner(`${baseUrl}/imgs/products/${result.banner1}`);
@@ -84,7 +84,7 @@ export default function LayoutManagement() {
             const imgField = `banner${i}` as keyof ShopDataApiResponse;
             if (result[imgField]) {
               newPreviewSliders[i - 1] =
-                `${baseUrl}/imgs/products/${result[imgField]}`;
+                `${baseUrl}/imgs/shop/${result[imgField]}`;
             }
           }
           setPreviewSliders(newPreviewSliders);

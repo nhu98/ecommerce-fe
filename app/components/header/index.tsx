@@ -335,7 +335,7 @@ function Header() {
               priority
               src={
                 shopData?.logo
-                  ? `${baseUrl}/imgs/products/${shopData?.logo}`
+                  ? `${baseUrl}/imgs/shop/${shopData?.logo}`
                   : '/images/no-image.webp'
               }
               width={80}

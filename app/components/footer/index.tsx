@@ -38,7 +38,7 @@ const Footer = () => {
               <Image
                 src={
                   shopData?.logo
-                    ? `${baseUrl}/imgs/products/${shopData?.logo}`
+                    ? `${baseUrl}/imgs/shop/${shopData?.logo}`
                     : '/images/no-image.webp'
                 }
                 alt="Logo"

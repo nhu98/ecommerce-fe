@@ -28,19 +28,19 @@ const Slider = () => {
         if (isValue(result)) {
           const sliderData = [
             result.banner1
-              ? `${baseUrl}/imgs/products/${result.banner1}`
+              ? `${baseUrl}/imgs/shop/${result.banner1}`
               : '/images/no-image.webp',
             result.banner2
-              ? `${baseUrl}/imgs/products/${result.banner2}`
+              ? `${baseUrl}/imgs/shop/${result.banner2}`
               : '/images/no-image.webp',
             result.banner3
-              ? `${baseUrl}/imgs/products/${result.banner3}`
+              ? `${baseUrl}/imgs/shop/${result.banner3}`
               : '/images/no-image.webp',
             result.banner4
-              ? `${baseUrl}/imgs/products/${result.banner4}`
+              ? `${baseUrl}/imgs/shop/${result.banner4}`
               : '/images/no-image.webp',
             result.banner5
-              ? `${baseUrl}/imgs/products/${result.banner5}`
+              ? `${baseUrl}/imgs/shop/${result.banner5}`
               : '/images/no-image.webp',
           ].filter((img) => img !== '/images/no-image.webp');
 

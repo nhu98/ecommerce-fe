@@ -4,6 +4,7 @@ import React from 'react';
 export interface NavLink {
   href: string;
   label: string;
+  icon: React.ElementType;
 }
 
 interface Props {

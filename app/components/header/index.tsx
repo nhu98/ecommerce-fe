@@ -2,9 +2,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import {
+  BookMarked,
+  Contact,
+  House,
   Inbox,
   KeyRound,
   Menu,
+  MessageCircleQuestion,
   Search,
   ShoppingCart,
   User,
@@ -35,15 +39,22 @@ const navLinks: NavLink[] = [
   {
     href: '/',
     label: 'Trang chủ',
+    icon: House,
   },
   {
     href: '/us-information?tab=intro',
     label: 'Giới thiệu',
+    icon: BookMarked,
   },
-  { href: '/us-information?tab=question', label: 'Câu hỏi' },
+  {
+    href: '/us-information?tab=question',
+    label: 'Câu hỏi',
+    icon: MessageCircleQuestion,
+  },
   {
     href: '/us-information?tab=contact',
     label: 'Liên hệ',
+    icon: Contact,
   },
 ];
 
@@ -256,10 +267,12 @@ function Header() {
             onClick={() => setOpenMenuSheet(false)}
           >
             <div className="flex flex-row  items-center gap-4 hover:text-red-500 hover:opacity-50 pb-1">
+              <link.icon size={16} />
               <p className="font-semibold">{link.label}</p>
             </div>
           </Link>
         ))}
+
         {categories?.map((category) => (
           <Link
             key={category.id}

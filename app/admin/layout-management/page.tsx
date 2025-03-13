@@ -29,7 +29,9 @@ export default function LayoutManagement() {
   const [loading, setLoading] = useState(false);
 
   const [logo, setLogo] = useState<string | null>();
-  // const [banner, setBanner] = useState<string | null>();
+  const [originalLogo, setOriginalLogo] = useState<string | null>(null);
+
+  const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
 
   const logoInputRefs = useRef<HTMLInputElement | null>(null);
   const bannerInputRefs = useRef<HTMLInputElement | null>(null);
@@ -39,6 +41,9 @@ export default function LayoutManagement() {
   const [previewSliders, setPreviewSliders] = useState<(string | null)[]>(
     Array(5).fill(null),
   );
+  const [originalSliders, setOriginalSliders] = useState<(string | null)[]>(
+    Array(5).fill(null),
+  ); // Store original slider names
 
   const [openImgDialog, setOpenImgDialog] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -74,20 +79,21 @@ export default function LayoutManagement() {
 
           if (result.logo) {
             setLogo(`${baseUrl}/imgs/shop/${result.logo}`);
+            setOriginalLogo(result.logo);
           }
-          // if (result.banner1) {
-          //   setBanner(`${baseUrl}/imgs/products/${result.banner1}`);
-          // }
 
           const newPreviewSliders = Array(5).fill(null);
+          const newOriginalSliders = Array(5).fill(null);
           for (let i = 1; i <= 5; i++) {
             const imgField = `banner${i}` as keyof ShopDataApiResponse;
             if (result[imgField]) {
               newPreviewSliders[i - 1] =
                 `${baseUrl}/imgs/shop/${result[imgField]}`;
+              newOriginalSliders[i - 1] = result[imgField]; // Store original slider names
             }
           }
           setPreviewSliders(newPreviewSliders);
+          setOriginalSliders(newOriginalSliders);
         }
       } catch (error) {
         console.log(error);
@@ -107,15 +113,17 @@ export default function LayoutManagement() {
     if (logo) {
       formData.append('logo', logoInputRefs.current?.files?.[0] || '');
     }
-    // if (banner) {
-    //   formData.append('banner', bannerInputRefs.current?.files?.[0] || '');
-    // }
 
     sliderInputRefs.current.forEach((ref, index) => {
       if (ref && ref.files && ref.files[0]) {
         formData.append(`banner${index + 1}`, ref.files[0]);
       }
     });
+
+    // Add images to delete
+    if (imagesToDelete.length > 0) {
+      formData.append('imagesToDelete', JSON.stringify(imagesToDelete));
+    }
 
     if (loading) return;
     setLoading(true);
@@ -152,9 +160,6 @@ export default function LayoutManagement() {
         if (type === 'logo') {
           setLogo(imageUrl);
         }
-        // else if (type === 'banner') {
-        //   setBanner(imageUrl);
-        // }
       };
       reader.readAsDataURL(file);
     }
@@ -167,14 +172,11 @@ export default function LayoutManagement() {
       if (logoInputRefs.current) {
         logoInputRefs.current.value = '';
       }
+      // Add to imagesToDelete if the cleared logo was a default one
+      if (originalLogo) {
+        setImagesToDelete((prev) => [...prev, 'logo']);
+      }
     }
-    // else if (type === 'banner') {
-    //   setBanner(null);
-    //
-    //   if (bannerInputRefs.current) {
-    //     bannerInputRefs.current.value = '';
-    //   }
-    // }
   };
 
   const handleSliderChange = (
@@ -204,6 +206,10 @@ export default function LayoutManagement() {
     });
     if (sliderInputRefs.current[index]) {
       sliderInputRefs.current[index].value = '';
+    }
+    // Add to imagesToDelete if the cleared slider was a default one
+    if (originalSliders[index]) {
+      setImagesToDelete((prev) => [...prev, `banner${index + 1}`]);
     }
   };
 
@@ -300,60 +306,6 @@ export default function LayoutManagement() {
                   </div>
                 </div>
               </div>
-
-              {/*<div className="w-full flex flex-col gap-2">*/}
-              {/*  <Label htmlFor="img">banner</Label>*/}
-              {/*  <div className="grid grid-cols-1">*/}
-              {/*    <Image*/}
-              {/*      src={banner || '/images/no-image.webp'}*/}
-              {/*      alt={'img-banner'}*/}
-              {/*      width={160}*/}
-              {/*      height={160}*/}
-              {/*      onClick={() => {}}*/}
-              {/*      className={`w-full rounded-lg object-cover cursor-pointer${loading ? 'opacity-50 cursor-not-allowed' : ''}`}*/}
-              {/*    />*/}
-              {/*  </div>*/}
-
-              {/*  <div className="flex flex-col gap-2 mt-2">*/}
-              {/*    <Input*/}
-              {/*      ref={(el) => {*/}
-              {/*        if (el) {*/}
-              {/*          bannerInputRefs.current = el;*/}
-              {/*        }*/}
-              {/*      }}*/}
-              {/*      id="banner"*/}
-              {/*      type="file"*/}
-              {/*      accept="image/*"*/}
-              {/*      disabled={loading}*/}
-              {/*      onChange={(event) => handleFileChange(event, 'banner')}*/}
-              {/*      className="hidden"*/}
-              {/*    />*/}
-
-              {/*    {banner && (*/}
-              {/*      <span className="text-sm text-gray-600 truncate">*/}
-              {/*        {bannerInputRefs.current?.files?.[0]?.name || ''}*/}
-              {/*      </span>*/}
-              {/*    )}*/}
-
-              {/*    <div className="flex flex-row gap-2">*/}
-              {/*      <label*/}
-              {/*        htmlFor={'banner'}*/}
-              {/*        className={`w-full bg-blue-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''} `}*/}
-              {/*      >*/}
-              {/*        Chọn Banner*/}
-              {/*      </label>*/}
-
-              {/*      {banner && (*/}
-              {/*        <label*/}
-              {/*          onClick={() => handleClearImage('banner')}*/}
-              {/*          className={`w-full bg-red-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}*/}
-              {/*        >*/}
-              {/*          Bỏ chọn*/}
-              {/*        </label>*/}
-              {/*      )}*/}
-              {/*    </div>*/}
-              {/*  </div>*/}
-              {/*</div>*/}
             </div>
 
             <div className="w-full flex flex-col gap-2">

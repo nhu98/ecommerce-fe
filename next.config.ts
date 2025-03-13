@@ -15,7 +15,6 @@ const nextConfig: NextConfig = {
         protocol: 'http',
         hostname: '14.225.206.204',
         port: '3001', // Thêm port nếu cần thiết
-        pathname: '/imgs/products/**', // Thêm pathname nếu cần thiết
       },
     ],
   },

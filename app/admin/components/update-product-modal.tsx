@@ -47,6 +47,7 @@ const UpdateProductModal = ({
   const [open, setOpen] = useState(false);
   const [openImgDialog, setOpenImgDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [imagesToDelete, setImagesToDelete] = useState<string[]>([]);
 
   const {
     register,
@@ -125,6 +126,10 @@ const UpdateProductModal = ({
     if (fileInputRefs.current[index]) {
       fileInputRefs.current[index].value = '';
     }
+    // Add to imagesToDelete if the cleared image was a default one
+    if (item[`img${index + 1}` as keyof ProductResponse]) {
+      setImagesToDelete((prev) => [...prev, `img${index + 1}`]);
+    }
   };
 
   const onSubmitForm = async (data: UpdateProductFormData) => {
@@ -141,6 +146,10 @@ const UpdateProductModal = ({
           formData.append(`img${index + 1}`, ref.files[0]);
         }
       });
+
+      if (imagesToDelete.length > 0) {
+        formData.append('imagesToDelete', JSON.stringify(imagesToDelete));
+      }
 
       if (loading) return;
       setLoading(true);

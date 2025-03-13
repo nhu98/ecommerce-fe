@@ -143,17 +143,20 @@ const Cart: React.FC = () => {
             ))}
           </div>
           <div className="w-full md:w-1/3 bg-gray-100 mt-4 p-8 border-t md:mt-0 md:border-t-0 shadow-2xl">
-            <h2 className="text-2xl font-bold mb-8">Tộng cộng</h2>
+            <h2 className="text-2xl font-bold mb-8">Tổng cộng</h2>
+
             <div className="flex justify-between">
-              <span className="font-medium">Tổng giá:</span>
+              <span className="font-semibold">Tổng giá sản phẩm:</span>
               <span>{formatPrice(calculateTotal())}</span>
             </div>
+
             <div className="flex justify-between mt-2">
-              <span className="font-medium">Vận chuyển:</span>
+              <span className="font-semibold">Phí vận chuyển:</span>
               <span>Chưa bao gồm</span>
             </div>
+
             <div className="flex justify-between mt-4">
-              <span className="font-medium">Tổng cộng:</span>
+              <span className="font-semibold">Tổng cộng:</span>
               <span className="text-xl font-bold">
                 {formatPrice(calculateTotal())}
               </span>

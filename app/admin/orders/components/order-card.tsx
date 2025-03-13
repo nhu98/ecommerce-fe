@@ -60,7 +60,7 @@ const OrderCard = ({ item, handleRemove }: OrderCardProps) => {
             {item.payment_status === 0 ? ' Chưa thanh toán' : ' Đã thanh toán'}
           </p>
           <p className="text-gray-500">
-            Giá sản phẩm: {formatPrice(item.price)}
+            Tổng giá sản phẩm: {formatPrice(item.price)}
           </p>
           <p className="text-gray-500">
             Phí vận chuyển: {formatPrice(item.ship_price)}

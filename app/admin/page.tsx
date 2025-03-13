@@ -72,7 +72,7 @@ export default function Product() {
   ]);
 
   useEffect(() => {
-    const intervalId = setInterval(checkNewOrders, 30000); // Gọi mỗi 30s
+    const intervalId = setInterval(checkNewOrders, 3000); // Gọi mỗi 3s
 
     return () => clearInterval(intervalId);
   }, []);
@@ -83,14 +83,17 @@ export default function Product() {
         phone: '',
         fromDate: '',
         toDate: '',
-        status: '',
+        status: 'waiting',
         payment_status: '',
         page: '1',
       });
 
       if (result?.orders && result?.orders.length > 0) {
         const firstOrderId = localStorage.getItem('firstOrderId') || '';
-        if (result.orders[0].id !== firstOrderId) {
+        if (
+          result.orders[0].id !== firstOrderId &&
+          result.orders[0].status === 'waiting'
+        ) {
           toast({
             title: 'Thông báo',
             description: `Có đơn hàng mới với mã đơn hàng ${result.orders[0].id}`,

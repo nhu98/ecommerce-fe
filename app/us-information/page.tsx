@@ -76,7 +76,7 @@ export default function UsInformation() {
     <div className="w-full min-h-[80vh]">
       <div className="wrapper overflow-x-hidden m-4 md:m-8">
         <div className="flex w-full flex-col justify-center items-center">
-          <h1 className="text-2xl">{renderTitle()}</h1>
+          <h1 className="text-2xl mb-4">{renderTitle()}</h1>
           {renderContent()}
         </div>
       </div>

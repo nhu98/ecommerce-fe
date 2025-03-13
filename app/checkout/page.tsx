@@ -282,7 +282,7 @@ const Checkout: React.FC = () => {
                 </div>
               </div>
               <div className="w-full md:w-1/3 bg-gray-100 mt-4 p-8 border-t md:mt-0 md:border-t-0 shadow-2xl">
-                <h2 className="text-2xl font-bold mb-8">Tộng cộng</h2>
+                <h2 className="text-2xl font-bold mb-8">Tổng cộng</h2>
 
                 {cartItems.map((item) => (
                   <div className="flex justify-between" key={item.product_id}>
@@ -293,18 +293,18 @@ const Checkout: React.FC = () => {
                   </div>
                 ))}
 
-                <div className="flex justify-between">
-                  <span className="font-bold">Tiền tạm tính</span>
-                  <span className="font-bold">
-                    {formatPrice(calculateSubTotal())}
-                  </span>
-                </div>
                 <div className="flex justify-between mt-2">
-                  <span className="font-bold">Vận chuyển</span>
-                  <span className="font-bold">Chưa bao gồm</span>
+                  <span className="font-semibold">Tổng giá sản phẩm:</span>
+                  <span className="">{formatPrice(calculateSubTotal())}</span>
                 </div>
+
+                <div className="flex justify-between mt-2">
+                  <span className="font-semibold">Phí vận chuyển:</span>
+                  <span className="">Chưa bao gồm</span>
+                </div>
+
                 <div className="flex justify-between mt-4">
-                  <span className="font-bold">Tổng cộng</span>
+                  <span className="font-semibold">Tổng cộng:</span>
                   <span className="text-xl font-bold">
                     {formatPrice(calculateSubTotal())}
                   </span>

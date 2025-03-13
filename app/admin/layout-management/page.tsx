@@ -281,28 +281,26 @@ export default function LayoutManagement() {
                     className="hidden"
                   />
 
-                  {logo && (
-                    <span className="text-sm text-gray-600 truncate">
-                      {logoInputRefs.current?.files?.[0]?.name || ''}
-                    </span>
-                  )}
+                  {/*{logo && (*/}
+                  {/*  <span className="text-sm text-gray-600 truncate">*/}
+                  {/*    {logoInputRefs.current?.files?.[0]?.name || ''}*/}
+                  {/*  </span>*/}
+                  {/*)}*/}
 
-                  <div className="flex flex-row gap-2">
+                  <div className="flex flex-col md:flex-row gap-2">
                     <label
                       htmlFor={'logo'}
-                      className={`w-full bg-blue-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''} `}
+                      className={`bg-blue-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''} `}
                     >
                       Chọn Logo
                     </label>
 
-                    {logo && (
-                      <label
-                        onClick={() => handleClearImage('logo')}
-                        className={`w-full bg-red-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      >
-                        Bỏ chọn
-                      </label>
-                    )}
+                    <label
+                      onClick={() => handleClearImage('logo')}
+                      className={`bg-red-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      Bỏ chọn
+                    </label>
                   </div>
                 </div>
               </div>
@@ -357,15 +355,15 @@ export default function LayoutManagement() {
                         >
                           Bỏ chọn
                         </label>
-                        <div className="flex flex-row items-center">
-                          {image && (
-                            <span className="text-sm text-gray-600 truncate max-w-[100px]">
-                              {sliderInputRefs.current[index]?.files?.[0]
-                                ?.name || ''}
-                              ád,al;msdl;ámldma;lsmd;ámd;má;ldmal;mdl;ámdl;mal;sdml;ámdl;
-                            </span>
-                          )}
-                        </div>
+                        {/*<div className="flex flex-row items-center">*/}
+                        {/*  {image && (*/}
+                        {/*    <span className="text-sm text-gray-600 truncate max-w-[100px]">*/}
+                        {/*      {sliderInputRefs.current[index]?.files?.[0]*/}
+                        {/*        ?.name || ''}*/}
+                        {/*      ád,al;msdl;ámldma;lsmd;ámd;má;ldmal;mdl;ámdl;mal;sdml;ámdl;*/}
+                        {/*    </span>*/}
+                        {/*  )}*/}
+                        {/*</div>*/}
                       </div>
                     </div>
                   </div>

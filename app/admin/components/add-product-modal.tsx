@@ -272,12 +272,12 @@ const AddProductModal = ({
                             Chọn hình {index + 1}
                           </label>
 
-                          {image && (
-                            <span className="text-sm text-gray-600 truncate max-w-[100px]">
-                              {fileInputRefs.current[index]?.files?.[0]?.name ||
-                                ''}
-                            </span>
-                          )}
+                          {/*{image && (*/}
+                          {/*  <span className="text-sm text-gray-600 truncate max-w-[100px]">*/}
+                          {/*    {fileInputRefs.current[index]?.files?.[0]?.name ||*/}
+                          {/*      ''}*/}
+                          {/*  </span>*/}
+                          {/*)}*/}
                         </div>
 
                         <label

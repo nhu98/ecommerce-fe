@@ -31,9 +31,9 @@ const Footer = () => {
   return (
     <footer className="bg-gray-100 py-4">
       <div className="container mx-auto px-4">
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex  flex-col md:flex-row justify-between items-center gap-4">
           {/* Logo and description */}
-          <div className="w-1/2 self-start mb-4 md:mb-0">
+          <div className="w-full self-start mb-4 md:mb-0">
             <div className="flex items-center">
               <Image
                 src={
@@ -49,7 +49,9 @@ const Footer = () => {
             </div>
             <p className="text-gray-500 mt-2">{shopData?.sologan}</p>
             <div className="flex mt-4">
-              <Facebook className="text-gray-500 hover:text-blue-500 mr-2" />
+              <a href="https://www.facebook.com/profile.php?id=100054357258523">
+                <Facebook className="text-gray-500 hover:text-blue-500 mr-2" />
+              </a>
               <Twitter className="text-gray-500 hover:text-blue-500 mr-2" />
               <Instagram className="text-gray-500 hover:text-pink-500 mr-2" />
               <Linkedin className="text-gray-500 hover:text-blue-500" />
@@ -57,7 +59,7 @@ const Footer = () => {
           </div>
 
           {/* Các liên kết */}
-          <div className="w-1/2 flex flex-col self-start md:flex-row ">
+          <div className="w-full self-start flex flex-col md:flex-row ">
             {/*<div className="md:mr-16">*/}
             {/*  <h4 className="font-bold mb-2">ABOUT US</h4>*/}
             {/*  <ul className="text-gray-500">*/}
@@ -93,6 +95,22 @@ const Footer = () => {
                   <Link href="/us-information?tab=contact">Liên hệ</Link>
                 </li>
               </ul>
+            </div>
+          </div>
+
+          {/* Google Maps */}
+          <div className="w-full self-start">
+            <h4 className="font-bold mb-2">ĐỊA CHỈ</h4>
+            <div className="w-full h-48">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3908.4068461813326!2d108.94729807550728!3d11.594315988608573!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3170d089def56555%3A0x9f56dc5c5e948e3!2zODExIDIxIFRow6FuZyA4LCDEkMO0IFZpbmgsIFBoYW4gUmFuZy1UaMOhcCBDaMOgbSwgTmluaCBUaHXhuq1uLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2sus!4v1741925661367!5m2!1svi!2sus"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
             </div>
           </div>
         </div>

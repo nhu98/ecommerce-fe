@@ -4,6 +4,7 @@ import CallMeIcon from '@/app/components/icons/call-me';
 import React, { useState } from 'react';
 import ZaloIcon from '@/app/components/icons/zalo';
 import { usePathname } from 'next/navigation';
+import FacebookIcon from '@/app/components/icons/facebook';
 
 export const CallZaloButton = () => {
   const pathname = usePathname();
@@ -15,14 +16,27 @@ export const CallZaloButton = () => {
 
   return (
     <>
-      <div className="fixed bottom-28 right-4 flex flex-col">
+      <div className="fixed bottom-44 right-4 flex flex-col">
+        <div className="flex justify-end">
+          <PulsatingButton>
+            <a
+              href="https://www.facebook.com/profile.php?id=100054357258523"
+              className="w-16 h-16 flex items-center justify-center rounded-full hover:bg-gray-300  transition"
+            >
+              <FacebookIcon className="w-16 h-16" />
+            </a>
+          </PulsatingButton>
+        </div>
+      </div>
+
+      <div className="fixed bottom-24 right-4 flex flex-col">
         <div className="flex justify-end">
           <PulsatingButton>
             <a
               href="https://zalo.me/0962486085"
-              className="w-20 h-20 flex items-center justify-center rounded-full hover:bg-gray-300  transition"
+              className="w-16 h-16 flex items-center justify-center rounded-full hover:bg-gray-300  transition"
             >
-              <ZaloIcon className="w-24 h-24" />
+              <ZaloIcon className="w-16 h-16" />
             </a>
           </PulsatingButton>
         </div>
@@ -52,9 +66,9 @@ export const CallZaloButton = () => {
             <a
               // href="tel:+84962486085"
               onClick={() => setShow(!show)}
-              className="w-20 h-20 flex items-center justify-center rounded-full hover:bg-gray-300  transition"
+              className="w-16 h-16 flex items-center justify-center rounded-full hover:bg-gray-300  transition"
             >
-              <CallMeIcon />
+              <CallMeIcon className="w-12 h-12" />
             </a>
           </PulsatingButton>
         </div>

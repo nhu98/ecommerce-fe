@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { useAppContext } from '@/app/AppProvider';
 
-const baseUrl = 'http://14.225.206.204:3001';
+const baseUrl = 'https://be.sondiennuoc.vn';
 
 export default function ProductDetail() {
   const router = useRouter();

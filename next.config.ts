@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
         hostname: 'qlbh-be.onrender.com',
       },
       {
+        protocol: 'https',
+        hostname: 'be.sondiennuoc.vn',
+      },
+      {
         protocol: 'http',
         hostname: '14.225.206.204',
         port: '3001', // Thêm port nếu cần thiết

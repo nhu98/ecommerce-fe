@@ -65,7 +65,7 @@ const navLinks: NavLink[] = [
 //   },
 // ];
 
-const baseUrl = 'http://14.225.206.204:3001';
+const baseUrl = 'https://be.sondiennuoc.vn';
 
 function Header() {
   const router = useRouter();

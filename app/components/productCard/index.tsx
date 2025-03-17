@@ -13,7 +13,7 @@ interface ProductCardProps {
   product: Product;
 }
 
-const baseUrl = 'http://14.225.206.204:3001';
+const baseUrl = 'https://be.sondiennuoc.vn';
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const router = useRouter();

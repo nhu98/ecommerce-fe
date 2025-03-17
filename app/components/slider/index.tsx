@@ -11,7 +11,7 @@ import { isValue } from '@/lib/utils';
 //   (_, i) => `https://picsum.photos/800/400?random=${i}`,
 // );
 
-const baseUrl = 'http://14.225.206.204:3001';
+const baseUrl = 'https://be.sondiennuoc.vn';
 
 const Slider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

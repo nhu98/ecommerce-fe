@@ -13,7 +13,7 @@ interface ProductCardProps {
   handleRefresh: () => void;
 }
 
-const baseUrl = 'http://14.225.206.204:3001';
+const baseUrl = 'https://be.sondiennuoc.vn';
 
 const ProductCard = ({
   item,

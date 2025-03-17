@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/dialog';
 import { Description } from '@radix-ui/react-dialog';
 
-const baseUrl = 'http://14.225.206.204:3001';
+const baseUrl = 'https://be.sondiennuoc.vn';
 
 export default function LayoutManagement() {
   const [loading, setLoading] = useState(false);

@@ -1,7 +1,7 @@
 import { toast } from '@/components/ui/use-toast';
 import { logout } from '@/lib/utils';
 
-const baseUrl = 'http://14.225.206.204:3001';
+const baseUrl = 'https://be.sondiennuoc.vn';
 
 export const isClient = () => typeof window !== 'undefined';
 

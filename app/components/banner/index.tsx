@@ -6,7 +6,7 @@ import { ShopDataApiResponse } from '@/schemaValidation/auth.schema';
 import { get } from '@/lib/http-client';
 import { isValue } from '@/lib/utils';
 
-const baseUrl = 'https://qlbh-be.onrender.com';
+const baseUrl = 'http://14.225.206.204:3001';
 
 const Banner = () => {
   const [shopData, setShopData] = useState<ShopDataApiResponse>();

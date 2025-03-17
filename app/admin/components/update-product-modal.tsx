@@ -27,7 +27,7 @@ import { putWithFormData } from '@/lib/http-client';
 import { toast } from '@/components/ui/use-toast';
 import { Description } from '@radix-ui/react-dialog';
 
-const baseUrl = 'https://qlbh-be.onrender.com';
+const baseUrl = 'http://14.225.206.204:3001';
 
 interface UpdateModalProps {
   item: ProductResponse;

@@ -8,7 +8,7 @@ import { toast } from '@/components/ui/use-toast';
 import { useAppContext } from '@/app/AppProvider';
 import { useRouter } from 'next/navigation';
 
-const baseUrl = 'https://qlbh-be.onrender.com';
+const baseUrl = 'http://14.225.206.204:3001';
 
 const Cart: React.FC = () => {
   const router = useRouter();

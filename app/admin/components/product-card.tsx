@@ -13,7 +13,7 @@ interface ProductCardProps {
   handleRefresh: () => void;
 }
 
-const baseUrl = 'https://qlbh-be.onrender.com';
+const baseUrl = 'http://14.225.206.204:3001';
 
 const ProductCard = ({
   item,

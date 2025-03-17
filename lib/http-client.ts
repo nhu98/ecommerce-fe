@@ -1,7 +1,7 @@
 import { toast } from '@/components/ui/use-toast';
 import { logout } from '@/lib/utils';
 
-const baseUrl = 'https://qlbh-be.onrender.com';
+const baseUrl = 'http://14.225.206.204:3001';
 
 export const isClient = () => typeof window !== 'undefined';
 

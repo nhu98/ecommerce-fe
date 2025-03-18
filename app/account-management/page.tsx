@@ -15,7 +15,7 @@ import { put } from '@/lib/http-client';
 import { toast } from '@/components/ui/use-toast';
 import { getLocalUser } from '@/lib/utils';
 import { useUser } from '@/lib/useUser';
-import { useAddress } from '@/lib/useAddress';
+// import { useAddress } from '@/lib/useAddress';
 import LoaderComponent from '@/app/components/loader';
 
 export default function AccountManagement() {
@@ -32,27 +32,27 @@ export default function AccountManagement() {
     resolver: zodResolver(updateUserSchema),
   });
 
-  const {
-    selectedCity,
-    setSelectedCity,
-    selectedDistrict,
-    setSelectedDistrict,
-    cityDefault,
-    setCityDefault,
-    districtDefault,
-    setDistrictDefault,
-    wardDefault,
-    setWardDefault,
-  } = useAddress(localUser?.city, localUser?.district);
+  // const {
+  //   selectedCity,
+  //   setSelectedCity,
+  //   selectedDistrict,
+  //   setSelectedDistrict,
+  //   cityDefault,
+  //   setCityDefault,
+  //   districtDefault,
+  //   setDistrictDefault,
+  //   wardDefault,
+  //   setWardDefault,
+  // } = useAddress(localUser?.city, localUser?.district);
 
   const { user, loading, setLoading } = useUser(localUser?.phone);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setLocalUser(getLocalUser());
-      setCityDefault(getLocalUser()?.city || '');
-      setDistrictDefault(getLocalUser()?.district || '');
-      setWardDefault(getLocalUser()?.ward || '');
+      // setCityDefault(getLocalUser()?.city || '');
+      // setDistrictDefault(getLocalUser()?.district || '');
+      // setWardDefault(getLocalUser()?.ward || '');
     }
   }, []);
 

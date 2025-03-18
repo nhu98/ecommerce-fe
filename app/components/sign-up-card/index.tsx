@@ -11,9 +11,6 @@ import {
 } from '@/schemaValidation/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import CitySelect from '@/app/components/city-select';
-import DistrictSelect from '@/app/components/district-select';
-import WardSelect from '@/app/components/ward-select';
 import { toast } from '@/components/ui/use-toast';
 import { post } from '@/lib/http-client';
 import { decodeToken } from '@/lib/utils';
@@ -30,12 +27,11 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const [selectedCity, setSelectedCity] = useState('');
-  const [selectedDistrict, setSelectedDistrict] = useState('');
+  // const [selectedCity, setSelectedCity] = useState('');
+  // const [selectedDistrict, setSelectedDistrict] = useState('');
 
   const {
-    register,
-    setValue,
+    register, // setValue,
     handleSubmit,
     formState: { errors },
   } = useForm<SignUpFormData>({
@@ -162,64 +158,64 @@ const SignUpCard = ({ onClose }: SignInCardProps) => {
             )}
           </div>
 
-          <div className="space-y-1">
-            <Label className="flex flex-row" htmlFor="city">
-              Thành phố / Tỉnh<p className="text-red-500 ml-1">*</p>
-            </Label>
-            <CitySelect
-              onChange={(value) => {
-                setValue('city', value.name);
-                setSelectedCity(value.id);
-              }}
-              register={register}
-              name="city"
-              disabled={loading}
-            />
-            {errors.city && (
-              <p className="text-red-500">{errors.city.message}</p>
-            )}
-          </div>
+          {/*<div className="space-y-1">*/}
+          {/*  <Label className="flex flex-row" htmlFor="city">*/}
+          {/*    Thành phố / Tỉnh<p className="text-red-500 ml-1">*</p>*/}
+          {/*  </Label>*/}
+          {/*  <CitySelect*/}
+          {/*    onChange={(value) => {*/}
+          {/*      setValue('city', value.name);*/}
+          {/*      setSelectedCity(value.id);*/}
+          {/*    }}*/}
+          {/*    register={register}*/}
+          {/*    name="city"*/}
+          {/*    disabled={loading}*/}
+          {/*  />*/}
+          {/*  {errors.city && (*/}
+          {/*    <p className="text-red-500">{errors.city.message}</p>*/}
+          {/*  )}*/}
+          {/*</div>*/}
 
-          <div className="space-y-1">
-            <Label className="flex flex-row" htmlFor="district">
-              Quận / Huyện<p className="text-red-500 ml-1">*</p>
-            </Label>
-            <DistrictSelect
-              onChange={(value) => {
-                setValue('district', value.name);
-                setSelectedDistrict(value.id);
-              }}
-              register={register}
-              name="district"
-              cityId={selectedCity}
-              disabled={loading}
-            />
-            {errors.district && (
-              <p className="text-red-500">{errors.district.message}</p>
-            )}
-          </div>
+          {/*<div className="space-y-1">*/}
+          {/*  <Label className="flex flex-row" htmlFor="district">*/}
+          {/*    Quận / Huyện<p className="text-red-500 ml-1">*</p>*/}
+          {/*  </Label>*/}
+          {/*  <DistrictSelect*/}
+          {/*    onChange={(value) => {*/}
+          {/*      setValue('district', value.name);*/}
+          {/*      setSelectedDistrict(value.id);*/}
+          {/*    }}*/}
+          {/*    register={register}*/}
+          {/*    name="district"*/}
+          {/*    cityId={selectedCity}*/}
+          {/*    disabled={loading}*/}
+          {/*  />*/}
+          {/*  {errors.district && (*/}
+          {/*    <p className="text-red-500">{errors.district.message}</p>*/}
+          {/*  )}*/}
+          {/*</div>*/}
 
-          <div className="space-y-1">
-            <Label className="flex flex-row" htmlFor="ward">
-              Phường / Xã<p className="text-red-500 ml-1">*</p>
-            </Label>
-            <WardSelect
-              onChange={(value) => {
-                setValue('ward', value.name);
-              }}
-              register={register}
-              name="ward"
-              districtId={selectedDistrict}
-              disabled={loading}
-            />
-            {errors.ward && (
-              <p className="text-red-500">{errors.ward.message}</p>
-            )}
-          </div>
+          {/*<div className="space-y-1">*/}
+          {/*  <Label className="flex flex-row" htmlFor="ward">*/}
+          {/*    Phường / Xã<p className="text-red-500 ml-1">*</p>*/}
+          {/*  </Label>*/}
+          {/*  <WardSelect*/}
+          {/*    onChange={(value) => {*/}
+          {/*      setValue('ward', value.name);*/}
+          {/*    }}*/}
+          {/*    register={register}*/}
+          {/*    name="ward"*/}
+          {/*    districtId={selectedDistrict}*/}
+          {/*    disabled={loading}*/}
+          {/*  />*/}
+          {/*  {errors.ward && (*/}
+          {/*    <p className="text-red-500">{errors.ward.message}</p>*/}
+          {/*  )}*/}
+          {/*</div>*/}
 
           <div className="space-y-1">
             <Label className="flex flex-row" htmlFor="street">
-              Số nhà / Đường<p className="text-red-500 ml-1">*</p>
+              Địa chỉ<p className="text-red-500 ml-1">*</p>
             </Label>
             <Input disabled={loading} id="street" {...register('street')} />
             {errors.street && (

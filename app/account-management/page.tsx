@@ -10,9 +10,6 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import CitySelect from '@/app/components/city-select';
-import DistrictSelect from '@/app/components/district-select';
-import WardSelect from '@/app/components/ward-select';
 import { Button } from '@/components/ui/button';
 import { put } from '@/lib/http-client';
 import { toast } from '@/components/ui/use-toast';
@@ -64,9 +61,9 @@ export default function AccountManagement() {
       setValue('name', user?.name || '');
       setValue('phone', user?.phone || '');
       setValue('email', user?.email || '');
-      setValue('city', user?.city || '');
-      setValue('district', user?.district || '');
-      setValue('ward', user?.ward || '');
+      // setValue('city', user?.city || '');
+      // setValue('district', user?.district || '');
+      // setValue('ward', user?.ward || '');
       setValue('street', user?.street || '');
     }
   }, [user]);
@@ -155,72 +152,72 @@ export default function AccountManagement() {
               )}
             </div>
 
-            <div className="space-y-1">
-              <Label className="flex flex-row" htmlFor="city">
-                Thành phố / Tỉnh<p className="text-red-500 ml-1">*</p>
-              </Label>
-              <CitySelect
-                onChange={(value) => {
-                  setValue('city', value.name);
-                  setValue('district', '');
-                  setValue('ward', '');
+            {/*<div className="space-y-1">*/}
+            {/*  <Label className="flex flex-row" htmlFor="city">*/}
+            {/*    Thành phố / Tỉnh<p className="text-red-500 ml-1">*</p>*/}
+            {/*  </Label>*/}
+            {/*  <CitySelect*/}
+            {/*    onChange={(value) => {*/}
+            {/*      setValue('city', value.name);*/}
+            {/*      setValue('district', '');*/}
+            {/*      setValue('ward', '');*/}
 
-                  setCityDefault('');
-                  setDistrictDefault('');
-                  setWardDefault('');
+            {/*      setCityDefault('');*/}
+            {/*      setDistrictDefault('');*/}
+            {/*      setWardDefault('');*/}
 
-                  setSelectedDistrict('');
-                  setSelectedCity(value.id);
-                }}
-                register={register}
-                name="city"
-                defaultValue={cityDefault}
-              />
-              {errors.city && (
-                <p className="text-red-500">{errors.city.message}</p>
-              )}
-            </div>
+            {/*      setSelectedDistrict('');*/}
+            {/*      setSelectedCity(value.id);*/}
+            {/*    }}*/}
+            {/*    register={register}*/}
+            {/*    name="city"*/}
+            {/*    defaultValue={cityDefault}*/}
+            {/*  />*/}
+            {/*  {errors.city && (*/}
+            {/*    <p className="text-red-500">{errors.city.message}</p>*/}
+            {/*  )}*/}
+            {/*</div>*/}
 
-            <div className="space-y-1">
-              <Label className="flex flex-row" htmlFor="district">
-                Quận / Huyện<p className="text-red-500 ml-1">*</p>
-              </Label>
-              <DistrictSelect
-                onChange={(value) => {
-                  setValue('district', value.name);
-                  setSelectedDistrict(value.id);
-                }}
-                register={register}
-                name="district"
-                cityId={selectedCity}
-                defaultValue={districtDefault}
-              />
-              {errors.district && (
-                <p className="text-red-500">{errors.district.message}</p>
-              )}
-            </div>
+            {/*<div className="space-y-1">*/}
+            {/*  <Label className="flex flex-row" htmlFor="district">*/}
+            {/*    Quận / Huyện<p className="text-red-500 ml-1">*</p>*/}
+            {/*  </Label>*/}
+            {/*  <DistrictSelect*/}
+            {/*    onChange={(value) => {*/}
+            {/*      setValue('district', value.name);*/}
+            {/*      setSelectedDistrict(value.id);*/}
+            {/*    }}*/}
+            {/*    register={register}*/}
+            {/*    name="district"*/}
+            {/*    cityId={selectedCity}*/}
+            {/*    defaultValue={districtDefault}*/}
+            {/*  />*/}
+            {/*  {errors.district && (*/}
+            {/*    <p className="text-red-500">{errors.district.message}</p>*/}
+            {/*  )}*/}
+            {/*</div>*/}
 
-            <div className="space-y-1">
-              <Label className="flex flex-row" htmlFor="ward">
-                Phường / Xã<p className="text-red-500 ml-1">*</p>
-              </Label>
-              <WardSelect
-                onChange={(value) => {
-                  setValue('ward', value.name);
-                }}
-                register={register}
-                name="ward"
-                districtId={selectedDistrict}
-                defaultValue={wardDefault}
-              />
-              {errors.ward && (
-                <p className="text-red-500">{errors.ward.message}</p>
-              )}
-            </div>
+            {/*<div className="space-y-1">*/}
+            {/*  <Label className="flex flex-row" htmlFor="ward">*/}
+            {/*    Phường / Xã<p className="text-red-500 ml-1">*</p>*/}
+            {/*  </Label>*/}
+            {/*  <WardSelect*/}
+            {/*    onChange={(value) => {*/}
+            {/*      setValue('ward', value.name);*/}
+            {/*    }}*/}
+            {/*    register={register}*/}
+            {/*    name="ward"*/}
+            {/*    districtId={selectedDistrict}*/}
+            {/*    defaultValue={wardDefault}*/}
+            {/*  />*/}
+            {/*  {errors.ward && (*/}
+            {/*    <p className="text-red-500">{errors.ward.message}</p>*/}
+            {/*  )}*/}
+            {/*</div>*/}
 
             <div className="space-y-1">
               <Label className="flex flex-row" htmlFor="street">
-                Số nhà / Đường<p className="text-red-500 ml-1">*</p>
+                Địa chỉ<p className="text-red-500 ml-1">*</p>
               </Label>
               <Input disabled={loading} id="street" {...register('street')} />
               {errors.street && (

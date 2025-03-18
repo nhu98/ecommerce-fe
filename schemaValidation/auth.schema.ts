@@ -31,14 +31,17 @@ export const signUpSchema = z.object({
   //   .email({ message: 'Email không hợp lệ' })
   //   .min(5, { message: 'Email phải có ít nhất 5 ký tự' })
   //   .max(255, { message: 'Email không được vượt quá 255 ký tự' }),
-  email: z.string().optional(),
-  city: z.string().min(1, { message: 'Chưa chọn Thành phố / Tỉnh' }),
-  district: z.string().min(1, { message: 'Chưa chọn Quận / Huyện' }),
-  ward: z.string().min(1, { message: 'Chưa chọn Phường / Xã' }),
+  email: z.string().optional(), // city: z.string().min(1, { message: 'Chưa chọn Thành phố / Tỉnh' }),
+  // district: z.string().min(1, { message: 'Chưa chọn Quận / Huyện' }),
+  // ward: z.string().min(1, { message: 'Chưa chọn Phường / Xã' }),
+  // street: z
+  //   .string()
+  //   .min(2, { message: 'Số nhà / Đường phải có ít nhất 2 ký tự' })
+  //   .max(200, { message: 'Số nhà / Đường không được vượt quá 200 ký tự' }),
   street: z
     .string()
-    .min(2, { message: 'Số nhà / Đường phải có ít nhất 2 ký tự' })
-    .max(200, { message: 'Số nhà / Đường không được vượt quá 200 ký tự' }),
+    .min(2, { message: 'Bắt buộc nhập địa chỉ' })
+    .max(300, { message: 'Địa chỉ không được vượt quá 300 ký tự' }),
 });
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;
@@ -368,14 +371,17 @@ export const updateUserSchema = z.object({
     .refine((value) => /^[\p{L}\s]+$/u.test(value), {
       message: 'Tên chỉ được chứa chữ cái, dấu tiếng Việt và khoảng trắng',
     }),
-  email: z.string().optional(),
-  city: z.string().min(1, { message: 'Chưa chọn Thành phố / Tỉnh' }),
-  district: z.string().min(1, { message: 'Chưa chọn Quận / Huyện' }),
-  ward: z.string().min(1, { message: 'Chưa chọn Phường / Xã' }),
+  email: z.string().optional(), // city: z.string().min(1, { message: 'Chưa chọn Thành phố / Tỉnh' }),
+  // district: z.string().min(1, { message: 'Chưa chọn Quận / Huyện' }),
+  // ward: z.string().min(1, { message: 'Chưa chọn Phường / Xã' }),
+  // street: z
+  //   .string()
+  //   .min(2, { message: 'Số nhà / Đường phải có ít nhất 2 ký tự' })
+  //   .max(200, { message: 'Số nhà / Đường không được vượt quá 200 ký tự' }),
   street: z
     .string()
-    .min(2, { message: 'Số nhà / Đường phải có ít nhất 2 ký tự' })
-    .max(200, { message: 'Số nhà / Đường không được vượt quá 200 ký tự' }),
+    .min(2, { message: 'Bắt buộc nhập địa chỉ' })
+    .max(300, { message: 'Địa chỉ không được vượt quá 300 ký tự' }),
 });
 
 export type UpdateUserFormData = z.infer<typeof updateUserSchema>;

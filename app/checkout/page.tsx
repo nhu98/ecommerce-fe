@@ -13,15 +13,15 @@ import {
   ProductOrderType,
 } from '@/schemaValidation/checkout.schema';
 import { CartItem, formatPrice, getLocalUser } from '@/lib/utils';
-import CitySelect from '@/app/components/city-select';
-import DistrictSelect from '@/app/components/district-select';
-import WardSelect from '@/app/components/ward-select';
+// import CitySelect from '@/app/components/city-select';
+// import DistrictSelect from '@/app/components/district-select';
+// import WardSelect from '@/app/components/ward-select';
 import LoaderComponent from '@/app/components/loader';
 import { post } from '@/lib/http-client';
 import { useAppContext } from '@/app/AppProvider';
 import { UserDataType } from '@/schemaValidation/auth.schema';
 import InfoModal from '@/app/components/info-modal';
-import { useAddress } from '@/lib/useAddress';
+// import { useAddress } from '@/lib/useAddress';
 
 const Checkout: React.FC = () => {
   const { isActioned, setIsActioned } = useAppContext();
@@ -46,25 +46,25 @@ const Checkout: React.FC = () => {
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [orderId, setOrderId] = useState('');
 
-  const {
-    selectedCity,
-    setSelectedCity,
-    selectedDistrict,
-    setSelectedDistrict,
-    cityDefault,
-    setCityDefault,
-    districtDefault,
-    setDistrictDefault,
-    wardDefault,
-    setWardDefault,
-  } = useAddress(localUser?.city, localUser?.district);
+  // const {
+  //   selectedCity,
+  //   setSelectedCity,
+  //   selectedDistrict,
+  //   setSelectedDistrict,
+  //   cityDefault,
+  //   setCityDefault,
+  //   districtDefault,
+  //   setDistrictDefault,
+  //   wardDefault,
+  //   setWardDefault,
+  // } = useAddress(localUser?.city, localUser?.district);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setLocalUser(getLocalUser());
-      setCityDefault(getLocalUser()?.city || '');
-      setDistrictDefault(getLocalUser()?.district || '');
-      setWardDefault(getLocalUser()?.ward || '');
+      // setCityDefault(getLocalUser()?.city || '');
+      // setDistrictDefault(getLocalUser()?.district || '');
+      // setWardDefault(getLocalUser()?.ward || '');
     }
   }, []);
 
@@ -74,9 +74,9 @@ const Checkout: React.FC = () => {
       setValue('email', localUser.email || '');
       setValue('customer_phone', localUser.phone || '');
       setValue('street', localUser.street || '');
-      setValue('city', localUser.city || '');
-      setValue('district', localUser.district || '');
-      setValue('ward', localUser.ward || '');
+      // setValue('city', localUser.city || '');
+      // setValue('district', localUser.district || '');
+      // setValue('ward', localUser.ward || '');
     }
   }, [localUser, setValue]);
 
@@ -202,73 +202,73 @@ const Checkout: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="grid gap-1">
-                    <Label className="flex flex-row" htmlFor="city">
-                      Thành phố / Tỉnh<p className="text-red-500 ml-1">*</p>
-                    </Label>
-                    <CitySelect
-                      onChange={(value) => {
-                        setValue('city', value.name);
-                        setValue('district', '');
-                        setValue('ward', '');
+                  {/*<div className="grid gap-1">*/}
+                  {/*  <Label className="flex flex-row" htmlFor="city">*/}
+                  {/*    Thành phố / Tỉnh<p className="text-red-500 ml-1">*</p>*/}
+                  {/*  </Label>*/}
+                  {/*  <CitySelect*/}
+                  {/*    onChange={(value) => {*/}
+                  {/*      setValue('city', value.name);*/}
+                  {/*      setValue('district', '');*/}
+                  {/*      setValue('ward', '');*/}
 
-                        setCityDefault('');
-                        setDistrictDefault('');
-                        setWardDefault('');
+                  {/*      setCityDefault('');*/}
+                  {/*      setDistrictDefault('');*/}
+                  {/*      setWardDefault('');*/}
 
-                        setSelectedDistrict('');
-                        setSelectedCity(value.id);
-                      }}
-                      register={register}
-                      name="city"
-                      defaultValue={cityDefault}
-                    />
-                    {errors.city && (
-                      <p className="text-red-500">{errors.city.message}</p>
-                    )}
-                  </div>
+                  {/*      setSelectedDistrict('');*/}
+                  {/*      setSelectedCity(value.id);*/}
+                  {/*    }}*/}
+                  {/*    register={register}*/}
+                  {/*    name="city"*/}
+                  {/*    defaultValue={cityDefault}*/}
+                  {/*  />*/}
+                  {/*  {errors.city && (*/}
+                  {/*    <p className="text-red-500">{errors.city.message}</p>*/}
+                  {/*  )}*/}
+                  {/*</div>*/}
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="grid gap-1">
-                      <Label className="flex flex-row" htmlFor="district">
-                        Quận / Huyện<p className="text-red-500 ml-1">*</p>
-                      </Label>
-                      <DistrictSelect
-                        onChange={(value) => {
-                          setValue('district', value.name);
-                          setSelectedDistrict(value.id);
-                        }}
-                        register={register}
-                        name="district"
-                        cityId={selectedCity}
-                        defaultValue={districtDefault}
-                      />
-                    </div>
-                    <div className="grid gap-1">
-                      <Label className="flex flex-row" htmlFor="ward">
-                        Phường / Xã<p className="text-red-500 ml-1">*</p>
-                      </Label>
-                      <WardSelect
-                        onChange={(value) => {
-                          setValue('ward', value.name);
-                        }}
-                        register={register}
-                        name="ward"
-                        districtId={selectedDistrict}
-                        defaultValue={wardDefault}
-                      />
-                    </div>
-                    {errors.district && (
-                      <p className="text-red-500">{errors.district.message}</p>
-                    )}
-                    {errors.ward && (
-                      <p className="text-red-500">{errors.ward.message}</p>
-                    )}
-                  </div>
+                  {/*<div className="grid grid-cols-2 gap-4">*/}
+                  {/*  <div className="grid gap-1">*/}
+                  {/*    <Label className="flex flex-row" htmlFor="district">*/}
+                  {/*      Quận / Huyện<p className="text-red-500 ml-1">*</p>*/}
+                  {/*    </Label>*/}
+                  {/*    <DistrictSelect*/}
+                  {/*      onChange={(value) => {*/}
+                  {/*        setValue('district', value.name);*/}
+                  {/*        setSelectedDistrict(value.id);*/}
+                  {/*      }}*/}
+                  {/*      register={register}*/}
+                  {/*      name="district"*/}
+                  {/*      cityId={selectedCity}*/}
+                  {/*      defaultValue={districtDefault}*/}
+                  {/*    />*/}
+                  {/*  </div>*/}
+                  {/*  <div className="grid gap-1">*/}
+                  {/*    <Label className="flex flex-row" htmlFor="ward">*/}
+                  {/*      Phường / Xã<p className="text-red-500 ml-1">*</p>*/}
+                  {/*    </Label>*/}
+                  {/*    <WardSelect*/}
+                  {/*      onChange={(value) => {*/}
+                  {/*        setValue('ward', value.name);*/}
+                  {/*      }}*/}
+                  {/*      register={register}*/}
+                  {/*      name="ward"*/}
+                  {/*      districtId={selectedDistrict}*/}
+                  {/*      defaultValue={wardDefault}*/}
+                  {/*    />*/}
+                  {/*  </div>*/}
+                  {/*  {errors.district && (*/}
+                  {/*    <p className="text-red-500">{errors.district.message}</p>*/}
+                  {/*  )}*/}
+                  {/*  {errors.ward && (*/}
+                  {/*    <p className="text-red-500">{errors.ward.message}</p>*/}
+                  {/*  )}*/}
+                  {/*</div>*/}
 
                   <div className="grid gap-1">
                     <Label className="flex flex-row" htmlFor="street">
-                      Số nhà / Đường<p className="text-red-500 ml-1">*</p>
+                      Địa chỉ<p className="text-red-500 ml-1">*</p>
                     </Label>
                     <Input
                       id="street"

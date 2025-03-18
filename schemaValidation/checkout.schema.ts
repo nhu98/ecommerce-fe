@@ -13,14 +13,17 @@ export const paymentFormSchema = z.object({
     .min(5, {
       message: 'Số điện thoại không hợp lệ',
     })
-    .max(11, { message: 'Số điện thoại không vượt quá 11 số' }),
-  city: z.string().min(1, { message: 'Chưa chọn Thành phố / Tỉnh' }),
-  district: z.string().min(1, { message: 'Chưa chọn Quận / Huyện' }),
-  ward: z.string().min(1, { message: 'Chưa chọn Phường / Xã' }),
+    .max(11, { message: 'Số điện thoại không vượt quá 11 số' }), // city: z.string().min(1, { message: 'Chưa chọn Thành phố / Tỉnh' }),
+  // district: z.string().min(1, { message: 'Chưa chọn Quận / Huyện' }),
+  // ward: z.string().min(1, { message: 'Chưa chọn Phường / Xã' }),
+  // street: z
+  //   .string()
+  //   .min(2, { message: 'Số nhà / Đường phải có ít nhất 2 ký tự' })
+  //   .max(200, { message: 'Số nhà / Đường không được vượt quá 200 ký tự' }),
   street: z
     .string()
-    .min(2, { message: 'Số nhà / Đường phải có ít nhất 2 ký tự' })
-    .max(200, { message: 'Số nhà / Đường không được vượt quá 200 ký tự' }),
+    .min(2, { message: 'Bắt buộc nhập địa chỉ' })
+    .max(300, { message: 'Địa chỉ không được vượt quá 300 ký tự' }),
   email: z.string().optional(),
 });
 
@@ -51,9 +54,9 @@ export interface CreateOrderApiRequest {
   name: string;
   email?: string;
   customer_phone: string;
-  city: string;
-  district: string;
-  ward: string;
+  // city: string;
+  // district: string;
+  // ward: string;
   street: string;
   discount: string;
   price: number;

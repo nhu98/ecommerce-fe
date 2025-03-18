@@ -44,7 +44,8 @@ const OrderCard = ({ item, handleRemove }: OrderCardProps) => {
           <p className="text-gray-500">SĐT Khách: {item.customer_phone}</p>
           <p className="text-gray-500">
             Địa chỉ:
-            {` ${item.city}, ${item.district}, ${item.ward}, ${item.street}`}
+            {/*{` ${item.city}, ${item.district}, ${item.ward}, ${item.street}`}*/}
+            {` ${item.street}`}
           </p>
         </div>
 

@@ -25,7 +25,8 @@ const AccountCard = ({ item, handleRemove }: AccountCardProps) => {
         <h3 className="font-medium">{item.phone}</h3>
         <p className="text-gray-500">{item.email}</p>
         <p className="text-gray-500">{item.name}</p>
-        <p className="text-gray-500">{`${item.city}, ${item.district}, ${item.ward}, ${item.street}`}</p>
+        {/*<p className="text-gray-500">{`${item.city}, ${item.district}, ${item.ward}, ${item.street}`}</p>*/}
+        <p className="text-gray-500">{` ${item.street}`}</p>
       </div>
 
       <ConfirmModal

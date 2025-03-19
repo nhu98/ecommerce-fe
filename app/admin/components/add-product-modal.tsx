@@ -25,6 +25,7 @@ import { Button } from '@/components/ui/button';
 import { postWithFormData } from '@/lib/http-client';
 import { toast } from '@/components/ui/use-toast';
 import { Description } from '@radix-ui/react-dialog';
+import Webcam from 'react-webcam';
 
 interface AddModalProps {
   childrenTrigger?: React.ReactNode;
@@ -43,6 +44,16 @@ const AddProductModal = ({
   const [loading, setLoading] = useState(false);
   const [openImgDialog, setOpenImgDialog] = useState(false);
 
+  const [openWebcam, setOpenWebcam] = useState(Array(5).fill(false));
+  const webcamRefs = useRef<(Webcam | null)[]>([]);
+
+  const [previewImages, setPreviewImages] = useState<(string | null)[]>(
+    Array(5).fill(null),
+  );
+  const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const {
     register,
     setValue,
@@ -53,18 +64,12 @@ const AddProductModal = ({
     resolver: zodResolver(addProductSchema),
   });
 
-  const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
-  const [previewImages, setPreviewImages] = useState<(string | null)[]>(
-    Array(5).fill(null),
-  );
-
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
   useEffect(() => {
     fileInputRefs.current = Array(5)
       .fill(null)
       .map(() => React.createRef<HTMLInputElement>().current);
+
+    webcamRefs.current = Array(5).fill(null);
   }, []);
 
   const handleNumberInput = (field: 'price', value: string) => {
@@ -101,6 +106,38 @@ const AddProductModal = ({
     if (fileInputRefs.current[index]) {
       fileInputRefs.current[index].value = '';
     }
+  };
+
+  const handleCapture = (index: number) => {
+    const webcam = webcamRefs.current[index];
+    if (webcam) {
+      const imageSrc = webcam.getScreenshot();
+      if (imageSrc) {
+        setPreviewImages((prev) => {
+          const newPreviewImages = [...prev];
+          newPreviewImages[index] = imageSrc;
+          return newPreviewImages;
+        });
+        // Chuyển imageSrc thành Blob hoặc File và lưu vào fileInputRefs
+        fetch(imageSrc)
+          .then((res) => res.blob())
+          .then((blob) => {
+            const file = new File([blob], `captured-image-${index}.png`, {
+              type: 'image/png',
+            });
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            if (fileInputRefs.current[index]) {
+              fileInputRefs.current[index].files = dataTransfer.files;
+            }
+          });
+      }
+    }
+    setOpenWebcam((prev) => {
+      const newOpenWebcam = [...prev];
+      newOpenWebcam[index] = false;
+      return newOpenWebcam;
+    });
   };
 
   const onSubmitForm = async (data: AddProductFormData) => {
@@ -266,8 +303,21 @@ const AddProductModal = ({
                       >
                         <div className=" flex flex-row items-center gap-2">
                           <label
+                            onClick={() => {
+                              setOpenWebcam((prev) => {
+                                const newOpenWebcam = [...prev];
+                                newOpenWebcam[index] = true;
+                                return newOpenWebcam;
+                              });
+                            }}
+                            className={`text-sm bg-green-500 text-white px-2 py-1 rounded cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          >
+                            Chụp ảnh {index + 1}
+                          </label>
+
+                          <label
                             htmlFor={`img${index + 1}`}
-                            className={`bg-blue-500 text-white px-2 py-1 rounded cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`text-sm bg-blue-500 text-white px-2 py-1 rounded cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
                             Chọn hình {index + 1}
                           </label>
@@ -282,12 +332,54 @@ const AddProductModal = ({
 
                         <label
                           onClick={() => handleClearImage(index)}
-                          className={` bg-red-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          className={`text-sm bg-red-500 text-white px-2 py-1 rounded cursor-pointer text-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                           Bỏ chọn
                         </label>
                       </div>
                     </div>
+
+                    {openWebcam[index] && (
+                      <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-85 flex items-center justify-center">
+                        <div className="relative">
+                          <Webcam
+                            audio={false}
+                            ref={(el) => {
+                              if (el) {
+                                webcamRefs.current[index] = el;
+                              }
+                            }}
+                            screenshotFormat="image/png"
+                            width={420}
+                            height={340}
+                            mirrored={true}
+                            className="rounded-lg"
+                          />
+                          <div className="flex justify-center mt-2">
+                            <Button
+                              onClick={() => handleCapture(index)}
+                              className="text-sm bg-blue-500 text-white px-2 rounded mr-2 w-14"
+                              type="button"
+                            >
+                              Chụp
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                setOpenWebcam((prev) => {
+                                  const newOpenWebcam = [...prev];
+                                  newOpenWebcam[index] = false;
+                                  return newOpenWebcam;
+                                });
+                              }}
+                              className="text-sm bg-gray-500 text-white px-2 rounded w-14"
+                              type="button"
+                            >
+                              Hủy
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

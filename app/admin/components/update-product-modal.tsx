@@ -60,6 +60,10 @@ const UpdateProductModal = ({
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>(
+    'environment',
+  );
+
   const {
     register,
     setValue,
@@ -167,6 +171,10 @@ const UpdateProductModal = ({
       newOpenWebcam[index] = false;
       return newOpenWebcam;
     });
+  };
+
+  const toggleCamera = () => {
+    setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'));
   };
 
   const onSubmitForm = async (data: UpdateProductFormData) => {
@@ -390,9 +398,18 @@ const UpdateProductModal = ({
                             width={420}
                             height={340}
                             mirrored={true}
+                            videoConstraints={{ facingMode }}
                             className="rounded-lg"
                           />
                           <div className="flex justify-center mt-2">
+                            <Button
+                              type="button"
+                              onClick={toggleCamera}
+                              className="px-2 bg-gray-500 text-white rounded mr-2"
+                            >
+                              Đổi Camera
+                            </Button>
+
                             <Button
                               onClick={() => handleCapture(index)}
                               className="text-sm bg-blue-500 text-white px-2 rounded mr-2 w-14"

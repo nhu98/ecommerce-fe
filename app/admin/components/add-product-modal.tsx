@@ -58,10 +58,6 @@ const AddProductModal = ({
     'environment',
   );
 
-  const toggleCamera = () => {
-    setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'));
-  };
-
   const {
     register,
     setValue,
@@ -146,6 +142,10 @@ const AddProductModal = ({
       newOpenWebcam[index] = false;
       return newOpenWebcam;
     });
+  };
+
+  const toggleCamera = () => {
+    setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'));
   };
 
   const onSubmitForm = async (data: AddProductFormData) => {

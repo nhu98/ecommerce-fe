@@ -350,9 +350,12 @@ const AddProductModal = ({
                               }
                             }}
                             screenshotFormat="image/png"
-                            width={420}
-                            height={340}
+                            width={320}
+                            height={240}
                             mirrored={true}
+                            videoConstraints={{
+                              facingMode: 'user',
+                            }}
                             className="rounded-lg"
                           />
                           <div className="flex justify-center mt-2">

@@ -54,6 +54,14 @@ const AddProductModal = ({
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>(
+    'environment',
+  );
+
+  const toggleCamera = () => {
+    setFacingMode((prev) => (prev === 'user' ? 'environment' : 'user'));
+  };
+
   const {
     register,
     setValue,
@@ -350,15 +358,32 @@ const AddProductModal = ({
                               }
                             }}
                             screenshotFormat="image/png"
-                            width={320}
-                            height={240}
+                            width="100%"
+                            height="auto"
+                            style={{ maxHeight: '40vh' }}
                             mirrored={true}
-                            videoConstraints={{
-                              facingMode: 'user',
-                            }}
+                            videoConstraints={{ facingMode }}
                             className="rounded-lg"
                           />
+
+                          {/*<div className={'flex justify-center mt-1'}>*/}
+                          {/*  <Button*/}
+                          {/*    type="button"*/}
+                          {/*    onClick={toggleCamera}*/}
+                          {/*    className="px-2 bg-gray-500 text-white rounded-md"*/}
+                          {/*  >*/}
+                          {/*    Đổi Camera*/}
+                          {/*  </Button>*/}
+                          {/*</div>*/}
+
                           <div className="flex justify-center mt-2">
+                            <Button
+                              type="button"
+                              onClick={toggleCamera}
+                              className="px-2 bg-gray-500 text-white rounded mr-2"
+                            >
+                              Đổi Camera
+                            </Button>
                             <Button
                               onClick={() => handleCapture(index)}
                               className="text-sm bg-blue-500 text-white px-2 rounded mr-2 w-14"

@@ -397,7 +397,7 @@ const UpdateProductModal = ({
                             screenshotFormat="image/png"
                             width={420}
                             height={340}
-                            mirrored={true}
+                            mirrored={facingMode === 'user'}
                             videoConstraints={{ facingMode }}
                             className="rounded-lg"
                           />

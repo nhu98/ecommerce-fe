@@ -361,7 +361,7 @@ const AddProductModal = ({
                             width="100%"
                             height="auto"
                             style={{ maxHeight: '40vh' }}
-                            mirrored={true}
+                            mirrored={facingMode === 'user'}
                             videoConstraints={{ facingMode }}
                             className="rounded-lg"
                           />

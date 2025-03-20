@@ -454,10 +454,9 @@ function Header() {
         ref={searchInputRef}
       >
         <div className="flex items-center">
-          <input
-            type="text"
-            placeholder="Search by keyword or #"
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          <SearchBox
+            onSearch={handleSearchByKey}
+            placeholder={'Tìm kiếm sản phẩm...'}
           />
           <button
             className="ml-2 text-gray-500 hover:text-gray-700"

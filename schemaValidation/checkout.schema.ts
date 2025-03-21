@@ -25,6 +25,7 @@ export const paymentFormSchema = z.object({
     .min(2, { message: 'Bắt buộc nhập địa chỉ' })
     .max(300, { message: 'Địa chỉ không được vượt quá 300 ký tự' }),
   email: z.string().optional(),
+  note: z.string().optional(),
 });
 
 export type PaymentFormData = z.infer<typeof paymentFormSchema>;

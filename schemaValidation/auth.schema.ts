@@ -96,6 +96,7 @@ export interface OrderResponse {
   price: number;
   status: string;
   payment_status: number;
+  note: string;
   products?: ProductOrderType[];
   ship_price: number;
 }

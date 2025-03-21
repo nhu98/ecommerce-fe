@@ -122,7 +122,7 @@ const BrandSelect = <T extends FieldValues>({
           </SelectItem>
         ))}
 
-        {totalPages > 1 && (
+        {totalPages > 1 && currentPage < totalPages && (
           <Button
             onClick={handleLoadMoreBrands}
             className="w-full mt-2 hover:bg-gray-100"

@@ -68,6 +68,10 @@ const OrderCard = ({ item }: OrderCardProps) => {
                 );
               })
             : ''}
+
+          <p className="text-gray-500">
+            Ghi chú: {item.note ? item.note : 'Không có ghi chú'}
+          </p>
         </div>
       </div>
     </>

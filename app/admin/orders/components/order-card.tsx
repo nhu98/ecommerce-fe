@@ -83,6 +83,9 @@ const OrderCard = ({ item, handleRemove }: OrderCardProps) => {
                 );
               })
             : ''}
+          <p className="text-gray-500">
+            Ghi chú: {item.note ? item.note : 'Không có ghi chú'}
+          </p>
         </div>
 
         <ConfirmModal

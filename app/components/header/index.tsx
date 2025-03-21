@@ -202,7 +202,7 @@ function Header() {
     );
   };
 
-  const { categories, totalPages, handleLoadMoreCategories } =
+  const { categories, currentPage, totalPages, handleLoadMoreCategories } =
     useCategoryData();
 
   const renderSheetContent = () => {
@@ -285,7 +285,7 @@ function Header() {
           </Link>
         ))}
 
-        {totalPages > 1 && (
+        {totalPages > 1 && currentPage < totalPages && (
           <Button
             onClick={handleLoadMoreCategories}
             className="w-full mt-2 hover:bg-gray-100"

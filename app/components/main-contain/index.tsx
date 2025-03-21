@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ProductCategory from '@/app/components/productCategory';
 import { get } from '@/lib/http-client';
 import {
@@ -29,39 +29,49 @@ const MainContent = () => {
   const [categoriesCurrentPage, setCategoriesCurrentPage] = useState(1);
 
   const [groupedProducts, setGroupedProducts] = useState<GroupedProduct[]>([]);
+  const [uniqueGroupedProducts, setUniqueGroupedProducts] = useState<
+    GroupedProduct[]
+  >([]);
   const loadedCategories = useRef<string[]>([]); // Sử dụng useRef
 
-  const fetchCategories = useCallback(async () => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const result = await get<CategoriesApiResponse>('/category/get', {
-        search: '',
-        page: categoriesCurrentPage.toString(),
-      });
+  useEffect(() => {
+    const fetchCategories = async () => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const result = await get<CategoriesApiResponse>('/category/get', {
+          search: '',
+          page: categoriesCurrentPage.toString(),
+        });
 
-      if (result?.categories.length === 0) {
-        setCategories([]);
-      } else if (result?.categories && result?.totalPages) {
-        if (categoriesCurrentPage === 1) {
-          setCategories(result?.categories);
-        } else {
-          setCategories((prevCategories) => [
-            ...prevCategories,
-            ...result.categories,
-          ]);
+        if (result?.categories.length === 0) {
+          setCategories([]);
+        } else if (result?.categories && result?.totalPages) {
+          if (categoriesCurrentPage === 1) {
+            setCategories(result?.categories);
+          } else {
+            setCategories((prevCategories) => [
+              ...prevCategories,
+              ...result.categories,
+            ]);
+          }
+          setCategoriesTotalPages(result?.totalPages);
         }
-        setCategoriesTotalPages(result?.totalPages);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    fetchCategories().then();
   }, [categoriesCurrentPage]);
 
-  const fetchProductsByCategory = useCallback(
-    async (categoryId: string, categoryName: string) => {
+  useEffect(() => {
+    const fetchProductsByCategory = async (
+      categoryId: string,
+      categoryName: string,
+    ) => {
       if (loading) return;
       setLoading(true);
       try {
@@ -97,23 +107,31 @@ const MainContent = () => {
       } finally {
         setLoading(false);
       }
-    },
-    [loading],
-  );
+    };
 
-  useEffect(() => {
-    fetchCategories().then();
-  }, [fetchCategories]);
+    const fetchAllCategories = async () => {
+      if (!categories.length) return;
 
-  useEffect(() => {
-    if (!categories.length) return;
-    categories.forEach((category) => {
-      if (!loadedCategories.current.includes(category.id)) {
-        fetchProductsByCategory(category.id, category.name).then();
-        loadedCategories.current.push(category.id);
+      for (const category of categories) {
+        if (!loadedCategories.current.includes(category.id)) {
+          await fetchProductsByCategory(category.id, category.name);
+          loadedCategories.current.push(category.id);
+        }
       }
-    });
-  }, [categories, fetchProductsByCategory]);
+    };
+
+    fetchAllCategories();
+  }, [categories]);
+
+  useEffect(() => {
+    if (groupedProducts.length > 0) {
+      const uniqueGroupedProducts = Array.from(
+        new Set(groupedProducts.map((obj) => JSON.stringify(obj))),
+      ).map((str) => JSON.parse(str));
+
+      setUniqueGroupedProducts(uniqueGroupedProducts);
+    }
+  }, [groupedProducts]);
 
   const handleLoadMoreCategories = () => {
     if (categoriesCurrentPage >= categoriesTotalPages) return;
@@ -129,32 +147,23 @@ const MainContent = () => {
 
     return (
       <>
-        {groupedProducts
-          .sort((a, b) => {
-            if (a.name < b.name) {
-              return -1;
-            }
-            if (a.name > b.name) {
-              return 1;
-            }
-            return 0;
-          })
-          .map((groupedProduct) => (
-            <ProductCategory
-              key={`category-${groupedProduct.id}`}
-              categoryName={groupedProduct.name}
-              products={groupedProduct.products}
-              loadMoreId={groupedProduct.id}
-            />
-          ))}
-        {categoriesTotalPages > 1 && (
-          <Button
-            onClick={handleLoadMoreCategories}
-            className="w-full mt-2 bg-gray-200 hover:bg-gray-100"
-          >
-            Xem thêm
-          </Button>
-        )}
+        {uniqueGroupedProducts.map((groupedProduct) => (
+          <ProductCategory
+            key={`category-${groupedProduct.id}`}
+            categoryName={groupedProduct.name}
+            products={groupedProduct.products}
+            loadMoreId={groupedProduct.id}
+          />
+        ))}
+        {categoriesTotalPages > 1 &&
+          categoriesCurrentPage < categoriesTotalPages && (
+            <Button
+              onClick={handleLoadMoreCategories}
+              className="w-full mt-2 bg-gray-200 hover:bg-gray-100"
+            >
+              Xem thêm
+            </Button>
+          )}
       </>
     );
   };

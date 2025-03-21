@@ -51,5 +51,11 @@ export const useCategoryData = () => {
     setCurrentPage(currentPage + 1);
   };
 
-  return { categories, totalPages, loading, handleLoadMoreCategories };
+  return {
+    categories,
+    currentPage,
+    totalPages,
+    loading,
+    handleLoadMoreCategories,
+  };
 };

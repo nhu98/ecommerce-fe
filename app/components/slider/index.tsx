@@ -23,7 +23,6 @@ const Slider = () => {
     const fetchShopData = async () => {
       try {
         const result = await get<ShopDataApiResponse>('/shop/get');
-        console.log('API Response:', result);
 
         if (isValue(result)) {
           const sliderData = [

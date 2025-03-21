@@ -21,6 +21,7 @@ import { post } from '@/lib/http-client';
 import { useAppContext } from '@/app/AppProvider';
 import { UserDataType } from '@/schemaValidation/auth.schema';
 import InfoModal from '@/app/components/info-modal';
+import { Textarea } from '@/components/ui/textarea';
 // import { useAddress } from '@/lib/useAddress';
 
 const Checkout: React.FC = () => {
@@ -277,6 +278,19 @@ const Checkout: React.FC = () => {
                     />
                     {errors.street && (
                       <p className="text-red-500">{errors.street.message}</p>
+                    )}
+                  </div>
+
+                  <div className="grid gap-1">
+                    <Label htmlFor="note">{'Ghi chú'}</Label>
+                    <Textarea
+                      id="note"
+                      {...register('note')}
+                      placeholder="Nhập ghi chú"
+                      disabled={loading}
+                    />
+                    {errors.note && (
+                      <p className="text-red-500">{errors.note.message}</p>
                     )}
                   </div>
                 </div>

@@ -41,7 +41,9 @@ export default function UsInformation() {
 
     return (
       <div className="w-full flex justify-center items-center">
-        <p className="text-lg">{renderInformation()}</p>
+        <pre className="text-lg" style={{ whiteSpace: 'pre-wrap' }}>
+          {renderInformation()}
+        </pre>
       </div>
     );
   };

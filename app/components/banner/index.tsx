@@ -42,6 +42,7 @@ const Banner = () => {
           alt={'banner'}
           style={{ padding: 10 }}
           className="object-cover rounded-2xl"
+          unoptimized
         />
         {/*<div className="absolute inset-0 flex flex-col items-center  text-center justify-between pt-[40px] md:pt-[80px]">*/}
         {/*  <div className="flex flex-col px-6">*/}

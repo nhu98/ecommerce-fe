@@ -57,6 +57,7 @@ export default function ProductThumbnail({ images }: ImageProps) {
               width={500}
               height={500}
               className="w-full h-auto rounded-lg"
+              unoptimized
             />
           </div>
         </DialogTrigger>
@@ -71,6 +72,7 @@ export default function ProductThumbnail({ images }: ImageProps) {
             height={300}
             alt="Full Image"
             className="w-full h-auto rounded-lg object-cover"
+            unoptimized
           />
           {/* Nút chuyển hình */}
           <div className="absolute top-1/2 flex w-full justify-between mt-4">
@@ -101,6 +103,7 @@ export default function ProductThumbnail({ images }: ImageProps) {
             height={80}
             className={`w-11 h-11 md:w-20 md:h-20 rounded-lg cursor-pointer border-2 ${selectedImage === img ? 'border-blue-500' : 'border-transparent'}`}
             onClick={() => handleSelect(index)}
+            unoptimized
           />
         ))}
       </div>

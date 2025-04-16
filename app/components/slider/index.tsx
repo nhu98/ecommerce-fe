@@ -87,6 +87,7 @@ const Slider = () => {
               width={800}
               height={400}
               className="w-full h-[400px] object-cover"
+              unoptimized
             />
           </div>
         ))}

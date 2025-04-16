@@ -263,6 +263,7 @@ export default function LayoutManagement() {
                       setOpenImgDialog(true);
                     }}
                     className={`rounded-lg object-cover cursor-pointer${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    unoptimized
                   />
                 </div>
 
@@ -322,6 +323,7 @@ export default function LayoutManagement() {
                         setOpenImgDialog(true);
                       }}
                       className={`w-full h-[200px] object-cover rounded-lg cursor-pointer${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      unoptimized
                     />
 
                     <div className="flex items-center gap-2 mt-2">
@@ -420,6 +422,7 @@ export default function LayoutManagement() {
             height={300}
             alt="Full Image"
             className="w-full h-full object-contain rounded-lg"
+            unoptimized
           />
         </DialogContent>
       </Dialog>

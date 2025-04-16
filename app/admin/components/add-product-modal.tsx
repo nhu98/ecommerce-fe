@@ -289,6 +289,7 @@ const AddProductModal = ({
                         setOpenImgDialog(true);
                       }}
                       className={`w-full h-full rounded-lg object-cover cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      unoptimized
                     />
 
                     <div className="flex items-center gap-2 mt-2">
@@ -460,6 +461,7 @@ const AddProductModal = ({
             height={300}
             alt="Full Image"
             className="w-full h-auto rounded-lg object-cover"
+            unoptimized
           />
         </DialogContent>
       </Dialog>

@@ -58,6 +58,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             sizes={'(max-width: 768px) 100vw, 50vw'}
             className="cursor-pointer object-cover"
             fill
+            unoptimized
           />
         </div>
       </Link>

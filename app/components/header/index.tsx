@@ -355,6 +355,7 @@ function Header() {
               height={80}
               className="cursor-pointer"
               alt={'logo'}
+              unoptimized
             />
           </Link>
         </div>

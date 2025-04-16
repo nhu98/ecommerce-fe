@@ -93,6 +93,7 @@ const Cart: React.FC = () => {
                     alt={item.name}
                     width={80}
                     height={80}
+                    unoptimized
                   />
                 </div>
 

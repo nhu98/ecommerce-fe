@@ -35,6 +35,7 @@ const ProductCard = ({
           alt={item.name}
           width={80}
           height={80}
+          unoptimized
         />
         <Label className="font-semibold">{item.name}</Label>
       </div>

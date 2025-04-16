@@ -44,6 +44,7 @@ const Footer = () => {
                 alt="Logo"
                 width={40}
                 height={40}
+                unoptimized
               />
               <span className="ml-2 font-bold text-xl">{shopData?.name}</span>
             </div>
